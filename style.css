@@ -482,8 +482,9 @@ input:checked + .slider:before {
 
 .spin-btn {
     width: 100%;
-    font-size: 1.75rem;
-    padding: 1.25rem;
+    font-size: 3rem;
+    line-height: 1;
+    padding: 0.75rem 1.25rem;
     box-shadow: var(--shadow);
     background-color: var(--accent-yellow);
     letter-spacing: 1px;
