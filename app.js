@@ -240,7 +240,7 @@ function drawWheel() {
 
         const maxTextWidth = radius - 60;
         
-        let fontSize = Math.min(22, Math.max(11, 280 / slices.length));
+        let fontSize = Math.min(42, Math.max(14, 320 / slices.length));
         ctx.font = `800 ${fontSize}px 'Space Grotesk', sans-serif`;
 
         let text = slice.text.toUpperCase();
