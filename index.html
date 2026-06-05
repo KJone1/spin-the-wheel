@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WHEEL DECIDES DESTINY</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1 class="logo-text">WHEEL DECIDES DESTINY</h1>
+        </header>
+
+        <main class="main-layout">
+            <!-- Left Column: Wheel and Active Entries -->
+            <section class="wheel-column">
+                <div class="wheel-wrapper">
+                    <div class="wheel-outer-ring">
+                        <div class="ticker-pin" id="ticker-pin"></div>
+                        <canvas id="wheel-canvas" width="600" height="600"></canvas>
+                    </div>
+                </div>
+
+                <div class="spin-action-area">
+                    <button id="spin-btn" class="brutalist-btn spin-btn">SPIN THE WHEEL</button>
+                </div>
+
+                <div class="brutalist-card border-black flex-grow" style="width: 100%;">
+                    <div class="card-header-row">
+                        <h3 class="card-title">ACTIVE ENTRIES</h3>
+                        <span id="total-slices" class="badge">0 SLICES</span>
+                    </div>
+                    <div class="entries-list-container">
+                        <ul id="entries-list" class="entries-list">
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column: Controls and Configurations -->
+            <section class="controls-column">
+                <div class="column-header">
+                    <h2>CONTROLS</h2>
+                </div>
+
+                <div class="brutalist-card border-blue">
+                    <h3 class="card-title">NEW ENTRY</h3>
+                    <form id="entry-form" class="entry-form">
+                        <div class="input-group">
+                            <label for="entry-text">LABEL</label>
+                            <input type="text" id="entry-text" placeholder="TYPE SOMETHING..." required autocomplete="off">
+                        </div>
+                        <div class="input-group">
+                            <label for="entry-replicas">REPLICAS</label>
+                            <input type="number" id="entry-replicas" value="1" min="1" max="100" required>
+                        </div>
+                        <button type="submit" class="brutalist-btn btn-yellow">ADD TO WHEEL</button>
+                    </form>
+                </div>
+
+                <div class="brutalist-card border-red">
+                    <h3 class="card-title">RESPIN OPTION</h3>
+                    <p class="card-desc">Adds a special "RESPIN" slice. Landing on this triggers auto-respin or prompts to spin again.</p>
+                    <div class="respin-config">
+                        <div class="toggle-container">
+                            <label class="switch">
+                                <input type="checkbox" id="respin-toggle">
+                                <span class="slider"></span>
+                            </label>
+                            <span class="toggle-label">ACTIVATE RESPIN SLICE</span>
+                        </div>
+                        <div class="input-group respin-replicas-group disabled" id="respin-replicas-container">
+                            <label for="respin-replicas">RESPIN REPLICAS</label>
+                            <input type="number" id="respin-replicas" value="1" min="1" max="100" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-row">
+                    <button id="shuffle-btn" class="brutalist-btn btn-yellow">SHUFFLE</button>
+                    <button id="presets-btn" class="brutalist-btn btn-yellow">PRESETS</button>
+                    <button id="settings-btn" class="brutalist-btn btn-yellow">SETTINGS</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="presets-modal" class="modal-overlay">
+        <div class="modal-card brutalist-card border-yellow">
+            <div class="modal-header">
+                <h2>PRESETS</h2>
+                <button class="modal-close brutalist-btn btn-red" id="close-presets-btn">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="presets-grid">
+                    <div class="brutalist-card border-black preset-item">
+                        <div class="preset-info">
+                            <h4 class="preset-title">YES OR NO</h4>
+                            <p class="preset-desc">3 x YES, 3 x NO (NO RESPIN)</p>
+                        </div>
+                        <button class="brutalist-btn btn-yellow btn-small" id="preset-yes-no-btn">APPLY</button>
+                    </div>
+                    <div class="brutalist-card border-black preset-item">
+                        <div class="preset-info">
+                            <h4 class="preset-title">WHO PAYS</h4>
+                            <p class="preset-desc">3 x DAVID, 3 x DOR, 4 x RESPIN</p>
+                        </div>
+                        <button class="brutalist-btn btn-yellow btn-small" id="preset-who-pays-btn">APPLY</button>
+                    </div>
+                    <div class="brutalist-card border-black preset-item">
+                        <div class="preset-info">
+                            <h4 class="preset-title">FOOD CATEGORY</h4>
+                            <p class="preset-desc">3 x HAMBURGER, 3 x SCHNITZEL, 3 x TORTILLA, 3 x ASIAN, 2 x RESPIN</p>
+                        </div>
+                        <button class="brutalist-btn btn-yellow btn-small" id="preset-food-btn">APPLY</button>
+                    </div>
+                    <div class="brutalist-card border-black preset-item">
+                        <div class="preset-info">
+                            <h4 class="preset-title">WOLT OR NO WOLT</h4>
+                            <p class="preset-desc">4 x WOLT, 4 x NO WOLT, 2 x RESPIN</p>
+                        </div>
+                        <button class="brutalist-btn btn-yellow btn-small" id="preset-wolt-btn">APPLY</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-card brutalist-card border-blue">
+            <div class="modal-header">
+                <h2>SETTINGS</h2>
+                <button class="modal-close brutalist-btn btn-red" id="close-settings-btn">X</button>
+            </div>
+            <div class="modal-body">
+                <form id="settings-form" class="entry-form">
+                    <div class="input-group">
+                        <label for="spin-duration">SPIN DURATION (SECONDS)</label>
+                        <input type="number" id="spin-duration" value="10" min="1" max="60" required>
+                    </div>
+                    <button type="submit" class="brutalist-btn btn-yellow" style="margin-top: 1rem;">SAVE SETTINGS</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="winner-modal" class="modal-overlay">
+        <div class="modal-card brutalist-card border-blue">
+            <div class="modal-body winner-body">
+                <span class="winner-label">AND THE WINNER IS:</span>
+                <h2 id="winner-text" class="winner-text">CHOICE HERE</h2>
+                <div id="winner-sub-msg" class="winner-subtext"></div>
+                <div class="winner-actions">
+                    <button class="brutalist-btn btn-yellow" id="winner-spin-again" style="display: none;">SPIN AGAIN</button>
+                    <button class="brutalist-btn btn-red" id="close-winner-btn">CLOSE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
