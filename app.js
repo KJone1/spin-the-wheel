@@ -27,6 +27,7 @@ let spinStartTime = 0;
 let spinDurationMs = 10000;
 let startAngle = 0;
 let totalRotation = 0;
+let isDefaultState = true;
 
 const canvas = document.getElementById('wheel-canvas');
 const ctx = canvas.getContext('2d');
@@ -351,6 +352,7 @@ function renderEntriesList() {
             const entry = entries.find(item => item.id === id);
             if (entry) {
                 entry.replicas = Math.min(100, entry.replicas + 1);
+                isDefaultState = false;
                 updateSlices();
             }
         });
@@ -362,6 +364,7 @@ function renderEntriesList() {
             const entry = entries.find(item => item.id === id);
             if (entry && entry.replicas > 1) {
                 entry.replicas--;
+                isDefaultState = false;
                 updateSlices();
             }
         });
@@ -371,6 +374,7 @@ function renderEntriesList() {
         btn.addEventListener('click', (e) => {
             const id = e.target.getAttribute('data-id');
             entries = entries.filter(item => item.id !== id);
+            isDefaultState = false;
             updateSlices();
         });
     });
@@ -495,6 +499,10 @@ entryForm.addEventListener('submit', (e) => {
     const replicas = parseInt(entryReplicasInp.value);
     
     if (text && replicas > 0) {
+        if (isDefaultState) {
+            entries = [];
+            isDefaultState = false;
+        }
         const id = Date.now().toString();
         
         const color = SLICE_COLORS[colorIndex];
@@ -549,10 +557,11 @@ presetsModal.addEventListener('click', (e) => {
     }
 });
 
-function applyPreset(presetEntries, presetRespinActive, presetRespinReplicas) {
+function applyPreset(presetEntries, presetRespinActive, presetRespinReplicas, isPresetDefault = false) {
     entries = presetEntries;
     respin.active = presetRespinActive;
     respin.replicas = presetRespinReplicas;
+    isDefaultState = isPresetDefault;
 
     respinToggle.checked = respin.active;
     respinReplicasInp.value = respin.replicas;
@@ -575,7 +584,7 @@ presetYesNoBtn.addEventListener('click', () => {
     applyPreset([
         { id: '1', text: 'YES', replicas: 3, color: '#ffcc00' },
         { id: '2', text: 'NO', replicas: 3, color: '#0055ff' }
-    ], false, 1);
+    ], false, 1, true);
 });
 
 presetWhoPaysBtn.addEventListener('click', () => {
