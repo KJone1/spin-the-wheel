@@ -201,6 +201,10 @@ body {
     border-bottom-color: var(--accent-blue);
 }
 
+.input-group input.error {
+    border-bottom-color: var(--accent-red);
+}
+
 .input-group.disabled {
     opacity: 0.4;
     pointer-events: none;
@@ -729,4 +733,57 @@ input:checked + .slider:before {
 .preset-desc {
     font-size: 0.85rem;
     color: #666;
+}
+
+.input-group {
+    position: relative;
+}
+
+.custom-validation-bubble {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    background-color: var(--accent-red);
+    color: var(--background);
+    border: var(--border-width) solid var(--primary);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 4px 4px 0px 0px var(--primary);
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+}
+
+.custom-validation-bubble.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.custom-validation-bubble::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid var(--primary);
+}
+
+.custom-validation-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 21px;
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid var(--accent-red);
 }

@@ -50,10 +50,11 @@
 
                 <div class="brutalist-card border-blue">
                     <h3 class="card-title">NEW ENTRY</h3>
-                    <form id="entry-form" class="entry-form">
+                    <form id="entry-form" class="entry-form" novalidate>
                         <div class="input-group">
                             <label for="entry-text">LABEL</label>
                             <input type="text" id="entry-text" placeholder="TYPE SOMETHING..." required autocomplete="off">
+                            <div class="custom-validation-bubble" id="entry-text-error">PLEASE GIVE A NAME TO YOUR ENTRY</div>
                         </div>
                         <div class="input-group">
                             <label for="entry-replicas">REPLICAS</label>
@@ -138,10 +139,11 @@
                 <button class="modal-close brutalist-btn btn-red" id="close-settings-btn">X</button>
             </div>
             <div class="modal-body">
-                <form id="settings-form" class="entry-form">
+                <form id="settings-form" class="entry-form" novalidate>
                     <div class="input-group">
                         <label for="spin-duration">SPIN DURATION (SECONDS)</label>
                         <input type="number" id="spin-duration" value="10" min="1" max="60" required>
+                        <div class="custom-validation-bubble" id="spin-duration-error">ENTER A VALUE BETWEEN 1 AND 60.</div>
                     </div>
                     <button type="submit" class="brutalist-btn btn-yellow" style="margin-top: 1rem;">SAVE SETTINGS</button>
                 </form>

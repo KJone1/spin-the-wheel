@@ -13,7 +13,7 @@ let respin = {
 let slices = [];
 
 const SLICE_COLORS = ['#ffcc00', '#0055ff', '#ffffff', '#f5f0e8'];
-let colorIndex = 2;
+let colorIndex = 0;
 
 let audioCtx = null;
 
@@ -497,24 +497,45 @@ entryForm.addEventListener('submit', (e) => {
     
     const text = entryTextInp.value.trim().toUpperCase();
     const replicas = parseInt(entryReplicasInp.value);
+    const errorBubble = document.getElementById('entry-text-error');
     
-    if (text && replicas > 0) {
-        if (isDefaultState) {
-            entries = [];
-            isDefaultState = false;
-        }
-        const id = Date.now().toString();
-        
-        const color = SLICE_COLORS[colorIndex];
-        colorIndex = (colorIndex + 1) % SLICE_COLORS.length;
-
-        entries.push({ id, text, replicas, color });
-        updateSlices();
-
-        entryTextInp.value = '';
-        entryReplicasInp.value = '1';
+    if (!text) {
+        entryTextInp.classList.add('error');
+        errorBubble.classList.add('show');
         entryTextInp.focus();
+        return;
     }
+    
+    if (isNaN(replicas) || replicas <= 0) {
+        entryReplicasInp.classList.add('error');
+        entryReplicasInp.focus();
+        return;
+    }
+    
+    if (isDefaultState) {
+        entries = [];
+        isDefaultState = false;
+    }
+    const id = Date.now().toString();
+    
+    const color = SLICE_COLORS[colorIndex];
+    colorIndex = (colorIndex + 1) % SLICE_COLORS.length;
+
+    entries.push({ id, text, replicas, color });
+    updateSlices();
+
+    entryTextInp.value = '';
+    entryReplicasInp.value = '1';
+    entryTextInp.focus();
+});
+
+entryTextInp.addEventListener('input', () => {
+    entryTextInp.classList.remove('error');
+    document.getElementById('entry-text-error').classList.remove('show');
+});
+
+entryReplicasInp.addEventListener('input', () => {
+    entryReplicasInp.classList.remove('error');
 });
 
 shuffleBtn.addEventListener('click', () => {
@@ -627,10 +648,20 @@ settingsModal.addEventListener('click', (e) => {
 settingsForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const val = parseInt(spinDurationInp.value);
-    if (val > 0) {
-        spinDuration = val;
+    const errorBubble = document.getElementById('spin-duration-error');
+    if (isNaN(val) || val <= 0 || val > 60) {
+        spinDurationInp.classList.add('error');
+        errorBubble.classList.add('show');
+        spinDurationInp.focus();
+        return;
     }
+    spinDuration = val;
     settingsModal.classList.remove('open');
+});
+
+spinDurationInp.addEventListener('input', () => {
+    spinDurationInp.classList.remove('error');
+    document.getElementById('spin-duration-error').classList.remove('show');
 });
 
 closeWinnerBtn.addEventListener('click', () => {
