@@ -300,7 +300,7 @@ input:checked + .slider:before {
 
 .btn-red {
     background-color: var(--accent-red);
-    color: var(--white);
+    color: var(--background);
 }
 .btn-red:hover {
     background-color: var(--primary);

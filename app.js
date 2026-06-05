@@ -236,7 +236,7 @@ function drawWheel() {
 
         ctx.textAlign = 'right';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = '#1a1a1a';
+        ctx.fillStyle = slice.color === '#0055ff' ? '#f5f0e8' : '#1a1a1a';
 
         const maxTextWidth = radius - 60;
         
