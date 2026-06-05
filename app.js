@@ -462,7 +462,7 @@ function showWinner() {
         setTimeout(() => {
             spinBtn.style.backgroundColor = '';
             spinBtn.style.color = '';
-            spinBtn.textContent = 'SPIN THE WHEEL';
+            spinBtn.textContent = 'SPIN!';
             startSpin();
         }, 1200);
     } else {
