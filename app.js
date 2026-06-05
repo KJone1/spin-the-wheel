@@ -302,9 +302,9 @@ function renderEntriesList() {
                 <span class="entry-replicas-count">x${entry.replicas}</span>
             </div>
             <div class="entry-item-actions">
-                <button class="brutalist-btn btn-small btn-yellow increment-btn" data-id="${entry.id}">+</button>
-                <button class="brutalist-btn btn-small btn-yellow decrement-btn" data-id="${entry.id}">-</button>
-                <button class="brutalist-btn btn-small btn-red delete-btn" data-id="${entry.id}">X</button>
+                <button class="brutalist-btn btn-small btn-yellow increment-btn" data-id="${entry.id}"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" style="pointer-events: none; display: inline-block; vertical-align: middle;"><line x1="8" y1="2" x2="8" y2="14"></line><line x1="2" y1="8" x2="14" y2="8"></line></svg></button>
+                <button class="brutalist-btn btn-small btn-yellow decrement-btn" data-id="${entry.id}"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" style="pointer-events: none; display: inline-block; vertical-align: middle;"><line x1="2" y1="8" x2="14" y2="8"></line></svg></button>
+                <button class="brutalist-btn btn-small btn-red delete-btn" data-id="${entry.id}"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" style="pointer-events: none; display: inline-block; vertical-align: middle;"><line x1="3" y1="3" x2="13" y2="13"></line><line x1="13" y1="3" x2="3" y2="13"></line></svg></button>
             </div>
         `;
         
@@ -323,8 +323,8 @@ function renderEntriesList() {
                 <span class="entry-replicas-count">x${respin.replicas}</span>
             </div>
             <div class="entry-item-actions">
-                <button class="brutalist-btn btn-small btn-yellow respin-inc">+</button>
-                <button class="brutalist-btn btn-small btn-yellow respin-dec">-</button>
+                <button class="brutalist-btn btn-small btn-yellow respin-inc"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" style="pointer-events: none; display: inline-block; vertical-align: middle;"><line x1="8" y1="2" x2="8" y2="14"></line><line x1="2" y1="8" x2="14" y2="8"></line></svg></button>
+                <button class="brutalist-btn btn-small btn-yellow respin-dec"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" style="pointer-events: none; display: inline-block; vertical-align: middle;"><line x1="2" y1="8" x2="14" y2="8"></line></svg></button>
             </div>
         `;
         

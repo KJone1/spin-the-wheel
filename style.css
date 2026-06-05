@@ -410,6 +410,24 @@ input:checked + .slider:before {
     flex-shrink: 0;
 }
 
+.entry-item-actions .brutalist-btn {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.entry-item-actions .increment-btn,
+.entry-item-actions .decrement-btn,
+.entry-item-actions .respin-inc,
+.entry-item-actions .respin-dec {
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
 .btn-small {
     padding: 0.25rem 0.5rem;
     font-size: 0.8rem;
