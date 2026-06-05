@@ -1,0 +1,26 @@
+{
+  "name": "spin-the-wheel",
+  "version": "1.0.0",
+  "description": "Could not find a decent spin the wheel website, so I vibecoded one for myself so I can offload hard decisions to luck.",
+  "main": "app.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KJone1/spin-the-wheel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/KJone1/spin-the-wheel/issues"
+  },
+  "homepage": "https://github.com/KJone1/spin-the-wheel#readme",
+  "devDependencies": {
+    "vite": "^8.0.16"
+  }
+}

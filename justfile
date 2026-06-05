@@ -1,2 +1,5 @@
 run:
-	open index.html
+	npm run dev
+
+view:
+	npm run preview
