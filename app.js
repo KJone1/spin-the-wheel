@@ -53,6 +53,7 @@ const presetYesNoBtn = document.getElementById('preset-yes-no-btn');
 const presetWhoPaysBtn = document.getElementById('preset-who-pays-btn');
 const presetFoodBtn = document.getElementById('preset-food-btn');
 const presetWoltBtn = document.getElementById('preset-wolt-btn');
+const presetSubmitsBtn = document.getElementById('preset-submits-btn');
 
 const settingsModal = document.getElementById('settings-modal');
 const closeSettingsBtn = document.getElementById('close-settings-btn');
@@ -628,6 +629,13 @@ presetWoltBtn.addEventListener('click', () => {
     applyPreset([
         { id: '1', text: 'WOLT', replicas: 4, color: '#ffcc00' },
         { id: '2', text: 'NO WOLT', replicas: 4, color: '#0055ff' }
+    ], true, 2);
+});
+
+presetSubmitsBtn.addEventListener('click', () => {
+    applyPreset([
+        { id: '1', text: 'DAVID', replicas: 3, color: '#ffcc00' },
+        { id: '2', text: 'OMER', replicas: 3, color: '#0055ff' }
     ], true, 2);
 });
 
