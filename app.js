@@ -620,7 +620,7 @@ presetFoodBtn.addEventListener('click', () => {
     applyPreset([
         { id: '1', text: 'HAMBURGER', replicas: 3, color: '#ffcc00' },
         { id: '2', text: 'SCHNITZEL', replicas: 3, color: '#0055ff' },
-        { id: '3', text: 'TORTILLA', replicas: 3, color: '#ffffff' },
+        { id: '3', text: 'TORTILLA', replicas: 3, color: '#ff5500' },
         { id: '4', text: 'ASIAN', replicas: 3, color: '#f5f0e8' },
         { id: '5', text: 'ABULAFIA', replicas: 3, color: '#00a86b' }
     ], true, 2);
