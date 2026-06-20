@@ -89,6 +89,16 @@ body {
     .logo-text {
         font-size: 2.5rem;
     }
+    .modal-overlay {
+        padding: 1rem;
+    }
+    .winner-body {
+        padding: 1rem 0;
+        gap: 1rem;
+    }
+    .winner-text {
+        padding: 1rem;
+    }
 }
 
 .controls-column {
@@ -652,11 +662,12 @@ input:checked + .slider:before {
 
 .winner-text {
     font-family: var(--font-heading);
-    font-size: 3rem;
+    font-size: clamp(1.8rem, 7vw, 3rem);
     line-height: 1.1;
     font-weight: 800;
     text-transform: uppercase;
-    word-break: break-word;
+    overflow-wrap: break-word;
+    word-break: normal;
     border: var(--border);
     padding: 1.5rem;
     background-color: var(--accent-yellow);
