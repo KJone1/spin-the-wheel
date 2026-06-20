@@ -12,7 +12,7 @@ let respin = {
 
 let slices = [];
 
-const SLICE_COLORS = ['#ffcc00', '#0055ff', '#ffffff', '#f5f0e8'];
+const SLICE_COLORS = ['#ffcc00', '#0055ff', '#ffffff', '#f5f0e8', '#00a86b', '#ff5500'];
 let colorIndex = 0;
 
 let audioCtx = null;
