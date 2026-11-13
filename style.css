@@ -328,6 +328,7 @@ input:checked + .slider:before {
 .brutalist-btn:active {
     transform: translate(4px, 4px);
     box-shadow: 0px 0px 0px 0px var(--primary);
+    transition: none;
 }
 
 .btn-yellow {
