@@ -27,6 +27,10 @@
     padding: 0;
 }
 
+html, body {
+    overflow-x: hidden;
+}
+
 body {
     background-color: var(--background);
     color: var(--primary);
@@ -92,12 +96,28 @@ body {
     .modal-overlay {
         padding: 1rem;
     }
+    .modal-card {
+        width: calc(100% - 12px);
+        margin: 0 auto;
+    }
+    .preset-item {
+        flex-direction: column !important;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    .button-row {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
     .winner-body {
         padding: 1rem 0;
         gap: 1rem;
     }
     .winner-text {
         padding: 1rem;
+    }
+    .wheel-column {
+        padding: 1.5rem;
     }
 }
 
@@ -143,17 +163,17 @@ body {
 
 .border-yellow {
     border-color: var(--primary);
-    outline: 4px solid var(--accent-yellow);
+    box-shadow: 0 0 0 4px var(--accent-yellow), var(--shadow);
 }
 
 .border-red {
     border-color: var(--primary);
-    outline: 4px solid var(--accent-red);
+    box-shadow: 0 0 0 4px var(--accent-red), var(--shadow);
 }
 
 .border-blue {
     border-color: var(--primary);
-    outline: 4px solid var(--accent-blue);
+    box-shadow: 0 0 0 4px var(--accent-blue), var(--shadow);
 }
 
 .border-black {
@@ -477,6 +497,7 @@ input:checked + .slider:before {
     display: flex;
     justify-content: center;
     align-items: center;
+    max-width: 100%;
 }
 
 #wheel-canvas {
@@ -572,7 +593,7 @@ input:checked + .slider:before {
     max-width: 600px;
     width: 100%;
     background-color: var(--white);
-    outline: 6px solid var(--primary);
+    box-shadow: 0 0 0 6px var(--primary), var(--shadow);
 }
 
 .modal-header {
