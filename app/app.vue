@@ -294,15 +294,17 @@ function handleWinner(slice: WheelSlice): void {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  container-type: inline-size;
 }
 
 .logo-text {
   font-family: var(--font-heading);
-  font-size: 3.5rem;
+  font-size: clamp(1rem, 6.8cqi, 3.5rem);
   font-weight: 800;
   line-height: 1;
   letter-spacing: -1px;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .main-layout {
@@ -334,12 +336,13 @@ function handleWinner(slice: WheelSlice): void {
 }
 
 @media (max-width: 900px) {
-  .main-layout {
-    grid-template-columns: minmax(0, 1fr);
+  .app-header {
+    padding: 1rem 1.25rem;
+    text-align: center;
   }
 
-  .logo-text {
-    font-size: 2.5rem;
+  .main-layout {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .wheel-column {
