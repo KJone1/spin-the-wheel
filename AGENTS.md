@@ -7,7 +7,7 @@
   - `app/assets/css/theme.css` -> Bauhaus Neo-Brutalist CSS variables and shared primitives
   - `app/components/WheelCanvas.vue` -> Client-only Canvas rendering, easing physics, auto-respin
   - `app/components/ControlsPanel.vue` -> Entry form, Reka Switch, Reka NumberField, action buttons
-  - `app/components/ActiveEntries.vue` -> Active slice rows with Reka NumberField steppers
+  - `app/components/EntriesList.vue` -> Entry slice rows with Reka NumberField steppers
   - `app/components/*Modal.vue` -> Reka Dialog modals (`PresetsModal`, `SettingsModal`, `WinnerModal`)
   - `app/utils/sound.ts` -> Web Audio API tick synth
   - `server/api/bootstrap.get.ts` -> Read-only D1 presets and settings loader (no fallback)

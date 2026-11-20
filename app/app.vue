@@ -243,7 +243,7 @@ function handleWinner(slice: WheelSlice): void {
         @open-presets="presetsOpen = true"
         @open-settings="settingsOpen = true"
       >
-        <ActiveEntries
+        <EntriesList
           :entries="entries"
           :respin="respin"
           :total-slices="slices.length"

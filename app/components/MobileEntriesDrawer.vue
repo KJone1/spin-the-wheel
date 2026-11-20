@@ -153,7 +153,7 @@ function onOpenSettings(): void {
                     @add-entry="emit('add-entry', $event)"
                   />
 
-                  <ActiveEntries
+                  <EntriesList
                     :entries="entries"
                     :respin="respin"
                     :total-slices="totalSlices"

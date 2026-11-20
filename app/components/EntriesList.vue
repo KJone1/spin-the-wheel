@@ -60,11 +60,11 @@ function formatRespinLabel(text: string): string {
 
 <template>
   <div
-    class="active-entries-card"
+    class="entries-card"
     :class="embedded ? 'is-embedded' : 'brutalist-card border-black'"
   >
     <div v-if="!embedded" class="card-header-row">
-      <h3 class="card-title">ACTIVE ENTRIES</h3>
+      <h3 class="card-title">ENTRIES</h3>
       <span class="badge">{{ totalSlices }} SLICES</span>
     </div>
 
@@ -190,7 +190,7 @@ function formatRespinLabel(text: string): string {
 </template>
 
 <style scoped>
-.active-entries-card {
+.entries-card {
   flex: 0 1 auto;
   min-height: 0;
   width: 100%;
@@ -199,7 +199,7 @@ function formatRespinLabel(text: string): string {
   gap: 0.65rem;
 }
 
-.active-entries-card.is-embedded {
+.entries-card.is-embedded {
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -254,7 +254,7 @@ function formatRespinLabel(text: string): string {
   min-width: 0;
 }
 
-.active-entries-card :deep(.entries-scroll-root:has(.entries-scrollbar[data-state='visible']) .entries-scroll-viewport) {
+.entries-card :deep(.entries-scroll-root:has(.entries-scrollbar[data-state='visible']) .entries-scroll-viewport) {
   padding-right: 14px;
 }
 
@@ -351,17 +351,17 @@ function formatRespinLabel(text: string): string {
 }
 
 @media (max-width: 900px) {
-  .active-entries-card:not(.is-embedded) {
+  .entries-card:not(.is-embedded) {
     flex: none;
     min-height: auto;
     padding: 1rem;
   }
 
-  .active-entries-card:not(.is-embedded) .entries-scroll-root {
+  .entries-card:not(.is-embedded) .entries-scroll-root {
     flex: none;
   }
 
-  .active-entries-card:not(.is-embedded) .entries-scroll-root :deep(.entries-scroll-viewport) {
+  .entries-card:not(.is-embedded) .entries-scroll-root :deep(.entries-scroll-viewport) {
     height: auto;
     max-height: 250px;
   }

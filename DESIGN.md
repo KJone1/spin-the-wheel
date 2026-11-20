@@ -27,7 +27,7 @@ Bold, raw, and unapologetic. Inspired by Bauhaus and brutalist architecture. Hig
 
 ## Layout Structure
 - **Two-Column Asymmetric Grid:**
-  - **Left Column (`1.8fr`):** Main Wheel canvas wrapper, Spin CTA button, and full-width Active Entries list.
+  - **Left Column (`1.8fr`):** Main Wheel canvas wrapper, Spin CTA button, and full-width Entries list.
   - **Right Column (`1.2fr`):** Form controls (New Entry inputs, Respin toggle setting, and button row for Shuffle, Presets, Settings).
 
 ## Rules
