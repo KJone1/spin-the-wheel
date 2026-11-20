@@ -69,8 +69,9 @@ function formatRespinLabel(text: string): string {
       <span class="badge">{{ totalSlices }} SLICES</span>
     </div>
 
-    <div class="entries-list-container">
-      <ul class="entries-list">
+    <ScrollAreaRoot type="auto" class="entries-scroll-root">
+      <ScrollAreaViewport class="entries-scroll-viewport">
+        <ul class="entries-list">
         <li v-for="entry in entries" :key="entry.id" class="entry-item">
           <div class="entry-item-info">
             <span class="entry-color-indicator" :style="{ backgroundColor: entry.color }" />
@@ -233,45 +234,76 @@ function formatRespinLabel(text: string): string {
           </div>
         </li>
       </ul>
-    </div>
+      </ScrollAreaViewport>
+      <ScrollAreaScrollbar orientation="vertical" class="entries-scrollbar">
+        <ScrollAreaThumb class="entries-scroll-thumb" />
+      </ScrollAreaScrollbar>
+    </ScrollAreaRoot>
   </div>
 </template>
 
 <style scoped>
 .active-entries-card {
-  flex-grow: 1;
+  flex: 0 1 auto;
+  min-height: 0;
   width: 100%;
   min-width: 0;
+  padding: 1rem 1.25rem;
+  gap: 0.65rem;
 }
 
 .card-header-row {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: var(--border);
-  padding-bottom: 0.75rem;
-  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
-.entries-list-container {
-  max-height: 250px;
-  overflow-y: auto;
+.card-header-row .card-title {
+  margin-bottom: 0;
+}
+
+.entries-scroll-root {
+  flex: 0 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   border: 2px solid var(--primary);
   background-color: var(--background);
 }
 
-.entries-list-container::-webkit-scrollbar {
-  width: 12px;
+.entries-scroll-root :deep(.entries-scroll-viewport) {
+  width: 100%;
+  flex: 0 1 auto;
+  min-height: 0;
 }
 
-.entries-list-container::-webkit-scrollbar-track {
-  background: var(--background);
-  border-left: var(--border);
+.entries-scroll-root :deep(.entries-scroll-viewport > div) {
+  width: 100%;
+  min-width: 0;
 }
 
-.entries-list-container::-webkit-scrollbar-thumb {
+.active-entries-card :deep(.entries-scroll-root:has(.entries-scrollbar[data-state='visible']) .entries-scroll-viewport) {
+  padding-right: 14px;
+}
+
+.entries-scroll-root :deep(.entries-scrollbar) {
+  display: flex;
+  user-select: none;
+  touch-action: none;
+  width: 14px;
+  background-color: var(--background);
+  border-left: 2px solid var(--primary);
+}
+
+.entries-scroll-root :deep(.entries-scroll-thumb) {
+  flex: 1;
   background-color: var(--primary);
-  border-left: var(--border);
+  position: relative;
 }
 
 .entries-list {
@@ -284,7 +316,7 @@ function formatRespinLabel(text: string): string {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.85rem;
   border-bottom: 2px solid var(--primary);
   background-color: var(--white);
   gap: 1rem;
@@ -363,7 +395,18 @@ function formatRespinLabel(text: string): string {
 
 @media (max-width: 900px) {
   .active-entries-card {
+    flex: none;
+    min-height: auto;
     padding: 1rem;
+  }
+
+  .entries-scroll-root {
+    flex: none;
+  }
+
+  .entries-scroll-root :deep(.entries-scroll-viewport) {
+    height: auto;
+    max-height: 250px;
   }
 
   .entry-item {

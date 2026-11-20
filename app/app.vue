@@ -224,14 +224,26 @@ function handleWinner(slice: WheelSlice): void {
             :slices="slices"
             :spin-duration="spinDuration"
             :auto-respin-delay-ms="autoRespinDelayMs"
+            :can-shuffle="slices.length > 1"
             @update:spinning="isSpinning = $event"
             @winner="handleWinner"
+            @shuffle="shuffleSlices"
           />
           <template #fallback>
             <div class="wheel-placeholder" />
           </template>
         </ClientOnly>
+      </section>
 
+      <ControlsPanel
+        :respin="respin"
+        :is-spinning="isSpinning"
+        @add-entry="addEntry"
+        @toggle-respin="toggleRespin"
+        @update-respin-replicas="updateRespinReplicas"
+        @open-presets="presetsOpen = true"
+        @open-settings="settingsOpen = true"
+      >
         <ActiveEntries
           :entries="entries"
           :respin="respin"
@@ -242,19 +254,7 @@ function handleWinner(slice: WheelSlice): void {
           @update-respin-replicas="updateRespinReplicas"
           @disable-respin="disableRespin"
         />
-      </section>
-
-      <ControlsPanel
-        :respin="respin"
-        :is-spinning="isSpinning"
-        :can-shuffle="slices.length > 1"
-        @add-entry="addEntry"
-        @toggle-respin="toggleRespin"
-        @update-respin-replicas="updateRespinReplicas"
-        @shuffle="shuffleSlices"
-        @open-presets="presetsOpen = true"
-        @open-settings="settingsOpen = true"
-      />
+      </ControlsPanel>
     </main>
 
     <PresetsModal
@@ -281,12 +281,15 @@ function handleWinner(slice: WheelSlice): void {
 .app-container {
   max-width: 1200px;
   margin: 0 auto;
+  height: calc(100dvh - 2.5rem);
+  min-height: 620px;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.25rem;
 }
 
 .app-header {
+  flex-shrink: 0;
   border: var(--border);
   background-color: var(--white);
   padding: 1.5rem 2rem;
@@ -308,45 +311,62 @@ function handleWinner(slice: WheelSlice): void {
 }
 
 .main-layout {
+  flex: 1;
+  min-height: 0;
   display: grid;
   grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
-  gap: 2rem;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 1.5rem;
   align-items: stretch;
 }
 
 .wheel-column {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  justify-content: flex-start;
+  gap: 1.5rem;
+  justify-content: center;
   align-items: center;
   min-width: 0;
+  min-height: 0;
   border: var(--border);
   background-color: var(--white);
-  padding: 2.5rem;
+  padding: 1.5rem;
   box-shadow: var(--shadow);
 }
 
 .wheel-placeholder {
-  width: 600px;
-  max-width: 100%;
+  width: min(100%, max(320px, calc(100dvh - 320px)));
   aspect-ratio: 1 / 1;
   border: var(--border);
   background-color: var(--background);
 }
 
 @media (max-width: 900px) {
+  .app-container {
+    height: auto;
+    min-height: 0;
+    gap: 2rem;
+  }
+
   .app-header {
     padding: 1rem 1.25rem;
     text-align: center;
   }
 
   .main-layout {
+    flex: none;
     grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    gap: 2rem;
   }
 
   .wheel-column {
     padding: 1.5rem;
+    gap: 2rem;
+  }
+
+  .wheel-placeholder {
+    width: min(100%, 600px);
   }
 }
 </style>

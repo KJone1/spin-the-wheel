@@ -4,14 +4,12 @@ import type { RespinConfig } from '~~/shared/types/wheel'
 const props = defineProps<{
   respin: RespinConfig
   isSpinning: boolean
-  canShuffle: boolean
 }>()
 
 const emit = defineEmits<{
   'add-entry': [payload: { text: string; replicas: number }]
   'toggle-respin': [active: boolean]
   'update-respin-replicas': [replicas: number]
-  shuffle: []
   'open-presets': []
   'open-settings': []
 }>()
@@ -72,26 +70,14 @@ function onToggleRespin(checked: boolean): void {
   }
   emit('toggle-respin', checked)
 }
-
-function onShuffle(): void {
-  if (props.isSpinning || !props.canShuffle) {
-    return
-  }
-  emit('shuffle')
-}
 </script>
 
 <template>
   <section class="controls-column">
-    <div class="column-header">
-      <h2>CONTROLS</h2>
-    </div>
-
-    <div class="brutalist-card border-blue">
-      <h3 class="card-title">NEW ENTRY</h3>
+    <div class="brutalist-card border-black entry-card">
       <form class="entry-form" novalidate @submit.prevent="onSubmitEntry">
         <div class="input-group">
-          <label for="entry-text">LABEL</label>
+          <label for="entry-text" class="card-title entry-title-label">NEW ENTRY</label>
           <input
             id="entry-text"
             ref="textInputRef"
@@ -130,12 +116,18 @@ function onShuffle(): void {
       </form>
     </div>
 
-    <div class="brutalist-card border-red">
-      <h3 class="card-title">ADD RESPIN</h3>
-      <p class="card-desc">Landing on this triggers auto-respin</p>
+    <slot />
 
-      <div class="respin-config">
-        <div class="toggle-container">
+    <div class="brutalist-card border-red respin-card">
+      <div class="respin-header">
+        <div class="respin-header-row">
+          <label
+            for="respin-toggle"
+            class="card-title respin-title"
+            :class="{ 'is-locked': isSpinning }"
+          >
+            ADD RESPIN
+          </label>
           <SwitchRoot
             id="respin-toggle"
             class="brutalist-switch"
@@ -145,40 +137,26 @@ function onShuffle(): void {
           >
             <SwitchThumb class="brutalist-switch-thumb" />
           </SwitchRoot>
-          <label
-            for="respin-toggle"
-            class="toggle-label"
-            :class="{ 'is-locked': isSpinning }"
-          >
-            ACTIVATE RESPIN SLICE
-          </label>
         </div>
-
-        <BauhausCounter
-          v-if="props.respin.active"
-          id="respin-replicas"
-          label="RESPIN REPLICAS"
-          :model-value="props.respin.replicas"
-          :min="1"
-          :max="100"
-          :step="1"
-          :readonly="isSpinning"
-          decrement-label="Decrease respin replicas"
-          increment-label="Increase respin replicas"
-          @update:model-value="onRespinReplicasUpdate"
-        />
+        <p class="card-desc respin-subtitle">Landing on this triggers auto-respin</p>
       </div>
+
+      <BauhausCounter
+        v-if="props.respin.active"
+        id="respin-replicas"
+        label="RESPIN REPLICAS"
+        :model-value="props.respin.replicas"
+        :min="1"
+        :max="100"
+        :step="1"
+        :readonly="isSpinning"
+        decrement-label="Decrease respin replicas"
+        increment-label="Increase respin replicas"
+        @update:model-value="onRespinReplicasUpdate"
+      />
     </div>
 
     <div class="button-row">
-      <button
-        type="button"
-        class="brutalist-btn btn-yellow"
-        :class="{ 'is-locked': isSpinning || !canShuffle }"
-        @click="onShuffle"
-      >
-        SHUFFLE
-      </button>
       <button
         type="button"
         class="brutalist-btn btn-yellow"
@@ -201,49 +179,63 @@ function onShuffle(): void {
 .controls-column {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
   min-width: 0;
+  height: 100%;
+  min-height: 0;
 }
 
-.column-header {
-  border-bottom: var(--border);
-  padding-bottom: 0.5rem;
+.entry-card {
+  flex-shrink: 0;
+  padding: 1.25rem;
 }
 
-.column-header h2 {
-  font-family: var(--font-heading);
-  font-size: 2rem;
-  text-transform: uppercase;
+.input-group .entry-title-label {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
 }
 
 .entry-form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
-.respin-config {
+.respin-card {
+  flex-shrink: 0;
+  padding: 0.9rem 1.25rem;
+  gap: 0.75rem;
+}
+
+.respin-header {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.25rem;
 }
 
-.toggle-container {
+.respin-header-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
 }
 
-.toggle-label {
-  font-family: var(--font-heading);
-  font-size: 0.95rem;
-  text-transform: uppercase;
+.respin-title {
+  margin-bottom: 0;
   font-weight: 700;
+  line-height: 1.1;
   cursor: pointer;
 }
 
-.toggle-label.is-locked {
+.respin-title.is-locked {
   cursor: not-allowed;
+}
+
+.respin-subtitle {
+  font-size: 0.8rem;
+  line-height: 1.25;
 }
 
 .brutalist-switch {
@@ -282,6 +274,7 @@ function onShuffle(): void {
 }
 
 .button-row {
+  flex-shrink: 0;
   display: flex;
   gap: 1rem;
 }
@@ -291,6 +284,12 @@ function onShuffle(): void {
 }
 
 @media (max-width: 900px) {
+  .controls-column {
+    gap: 2rem;
+    height: auto;
+    min-height: 0;
+  }
+
   .button-row {
     flex-direction: column;
     gap: 0.75rem;

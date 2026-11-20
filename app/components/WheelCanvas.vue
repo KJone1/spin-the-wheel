@@ -6,11 +6,13 @@ const props = defineProps<{
   slices: WheelSlice[]
   spinDuration: number
   autoRespinDelayMs: number
+  canShuffle: boolean
 }>()
 
 const emit = defineEmits<{
   'update:spinning': [value: boolean]
   winner: [slice: WheelSlice]
+  shuffle: []
 }>()
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
@@ -18,6 +20,7 @@ const tickerPinRef = ref<HTMLDivElement | null>(null)
 
 const isSpinning = ref(false)
 const isAutoRespinning = ref(false)
+const isHoveringCenter = ref(false)
 
 let currentAngle = 0
 let lastTickSliceIndex = -1
@@ -261,6 +264,43 @@ function startSpin(): void {
   beginSpinMotion()
 }
 
+function isPointInCenterHub(event: MouseEvent): boolean {
+  const canvas = canvasRef.value
+  if (!canvas) {
+    return false
+  }
+  const rect = canvas.getBoundingClientRect()
+  if (rect.width === 0 || rect.height === 0) {
+    return false
+  }
+  const x = ((event.clientX - rect.left) / rect.width) * canvas.width
+  const y = ((event.clientY - rect.top) / rect.height) * canvas.height
+  const center = canvas.width / 2
+  return Math.hypot(x - center, y - center) <= 35
+}
+
+function onCanvasMouseMove(event: MouseEvent): void {
+  isHoveringCenter.value = isPointInCenterHub(event)
+}
+
+function onCanvasMouseLeave(): void {
+  isHoveringCenter.value = false
+}
+
+function onCanvasClick(event: MouseEvent): void {
+  if (!isPointInCenterHub(event)) {
+    return
+  }
+  startSpin()
+}
+
+function onShuffle(): void {
+  if (isSpinning.value || !props.canShuffle) {
+    return
+  }
+  emit('shuffle')
+}
+
 watch(
   () => props.slices,
   () => {
@@ -292,22 +332,45 @@ onBeforeUnmount(() => {
   <div class="wheel-wrapper">
     <div class="wheel-outer-ring">
       <div ref="tickerPinRef" class="ticker-pin" />
-      <canvas ref="canvasRef" class="wheel-canvas" width="600" height="600" />
+      <canvas
+        ref="canvasRef"
+        class="wheel-canvas"
+        :class="{
+          'is-center-clickable': isHoveringCenter && !isSpinning && slices.length > 0,
+          'is-center-locked': isHoveringCenter && (isSpinning || slices.length === 0)
+        }"
+        width="600"
+        height="600"
+        @mousemove="onCanvasMouseMove"
+        @mouseleave="onCanvasMouseLeave"
+        @click="onCanvasClick"
+      />
     </div>
   </div>
 
   <div class="spin-action-area">
+    <div class="spin-btn-wrap">
+      <button
+        type="button"
+        class="brutalist-btn spin-btn"
+        :class="{
+          'is-spinning': isSpinning,
+          'respin-flash': isAutoRespinning,
+          'is-locked': isSpinning || slices.length === 0
+        }"
+        @click="startSpin"
+      >
+        {{ isAutoRespinning ? 'HERE WE GO AGAIN...' : isSpinning ? 'SPINNING...' : 'SPIN!' }}
+      </button>
+    </div>
+
     <button
       type="button"
-      class="brutalist-btn spin-btn"
-      :class="{
-        'is-spinning': isSpinning,
-        'respin-flash': isAutoRespinning,
-        'is-locked': isSpinning || slices.length === 0
-      }"
-      @click="startSpin"
+      class="brutalist-btn shuffle-btn"
+      :class="{ 'is-locked': isSpinning || !canShuffle }"
+      @click="onShuffle"
     >
-      {{ isAutoRespinning ? 'HERE WE GO AGAIN...' : isSpinning ? 'SPINNING...' : 'SPIN!' }}
+      SHUFFLE
     </button>
   </div>
 </template>
@@ -319,7 +382,6 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 1.5rem;
 }
 
 .wheel-outer-ring {
@@ -328,17 +390,24 @@ onBeforeUnmount(() => {
   background-color: var(--primary);
   padding: 8px;
   box-shadow: 6px 6px 0px 0px var(--primary);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 100%;
+  display: block;
+  width: min(100%, max(320px, calc(100dvh - 320px)));
 }
 
 .wheel-canvas {
-  max-width: 100%;
+  width: 100%;
   height: auto;
+  aspect-ratio: 1 / 1;
   background-color: var(--white);
   display: block;
+}
+
+.wheel-canvas.is-center-clickable {
+  cursor: pointer;
+}
+
+.wheel-canvas.is-center-locked {
+  cursor: not-allowed;
 }
 
 .ticker-pin {
@@ -367,7 +436,15 @@ onBeforeUnmount(() => {
 }
 
 .spin-action-area {
-  width: 100%;
+  width: min(100%, max(320px, calc(100dvh - 320px)));
+  display: flex;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.spin-btn-wrap {
+  flex: 1;
+  min-width: 0;
   container-type: inline-size;
 }
 
@@ -418,5 +495,49 @@ onBeforeUnmount(() => {
   background-color: var(--accent-red);
   color: var(--white);
   border-color: var(--primary);
+}
+
+.shuffle-btn {
+  height: 78px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.5rem;
+  font-size: 1.15rem;
+  box-shadow: var(--shadow);
+  letter-spacing: 0.5px;
+}
+
+@media (hover: hover) {
+  .shuffle-btn:hover:not(:disabled):not(.is-locked) {
+    background-color: var(--primary);
+    color: var(--white);
+    box-shadow: var(--shadow-hover);
+    transform: translate(-3px, -3px);
+  }
+}
+
+.shuffle-btn:active:not(:disabled):not(.is-locked) {
+  background-color: var(--primary);
+  color: var(--white);
+  transform: translate(6px, 6px);
+  box-shadow: 0px 0px 0px 0px var(--primary);
+}
+
+@media (max-width: 900px) {
+  .wheel-outer-ring,
+  .spin-action-area {
+    width: min(100%, 600px);
+  }
+
+  .spin-action-area {
+    gap: 0.75rem;
+  }
+
+  .shuffle-btn {
+    padding: 0 1rem;
+    font-size: 0.95rem;
+  }
 }
 </style>
