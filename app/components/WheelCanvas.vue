@@ -540,28 +540,28 @@ onBeforeUnmount(() => {
   }
 
   .spin-action-area {
-    gap: 0.65rem;
+    gap: 0.75rem;
   }
 
   .spin-btn {
-    height: 60px;
-    font-size: clamp(1.35rem, 11cqi, 2.2rem);
+    height: 76px;
+    font-size: clamp(1.65rem, 13cqi, 2.6rem);
   }
 
   .spin-btn.is-spinning {
-    font-size: clamp(0.95rem, 10cqi, 1.9rem);
+    font-size: clamp(1.05rem, 10.5cqi, 2.1rem);
   }
 
   .spin-btn.respin-flash,
   .spin-btn.respin-flash:hover,
   .spin-btn.respin-flash:active {
-    font-size: clamp(0.75rem, 6.5cqi, 1.5rem);
+    font-size: clamp(0.75rem, 6.5cqi, 1.65rem);
   }
 
   .shuffle-btn {
-    height: 60px;
-    padding: 0 0.9rem;
-    font-size: 0.9rem;
+    height: 76px;
+    padding: 0 1.15rem;
+    font-size: 1.05rem;
   }
 }
 </style>
