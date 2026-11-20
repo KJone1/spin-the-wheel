@@ -545,11 +545,12 @@ onBeforeUnmount(() => {
 
   .spin-btn {
     height: 76px;
-    font-size: clamp(1.65rem, 13cqi, 2.6rem);
+    padding: 0 0.75rem;
+    font-size: clamp(2rem, 22cqi, 3.25rem);
   }
 
   .spin-btn.is-spinning {
-    font-size: clamp(1.05rem, 10.5cqi, 2.1rem);
+    font-size: clamp(1.1rem, 12cqi, 2.2rem);
   }
 
   .spin-btn.respin-flash,
