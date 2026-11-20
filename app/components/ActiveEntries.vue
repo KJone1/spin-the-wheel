@@ -21,18 +21,13 @@ const emit = defineEmits<{
   'disable-respin': []
 }>()
 
-function incrementEntry(entry: WheelEntry): void {
-  if (props.disabled || entry.replicas >= 100) {
+function onEntryReplicasUpdate(id: string, value: number): void {
+  if (props.disabled) {
     return
   }
-  emit('update-replicas', entry.id, entry.replicas + 1)
-}
-
-function decrementEntry(entry: WheelEntry): void {
-  if (props.disabled || entry.replicas <= 1) {
-    return
+  if (typeof value === 'number' && !Number.isNaN(value)) {
+    emit('update-replicas', id, Math.min(100, Math.max(1, Math.round(value))))
   }
-  emit('update-replicas', entry.id, entry.replicas - 1)
 }
 
 function deleteEntry(id: string): void {
@@ -42,18 +37,13 @@ function deleteEntry(id: string): void {
   emit('delete-entry', id)
 }
 
-function incrementRespin(current: number): void {
-  if (props.disabled || current >= 100) {
+function onRespinReplicasUpdate(value: number): void {
+  if (props.disabled) {
     return
   }
-  emit('update-respin-replicas', current + 1)
-}
-
-function decrementRespin(current: number): void {
-  if (props.disabled || current <= 1) {
-    return
+  if (typeof value === 'number' && !Number.isNaN(value)) {
+    emit('update-respin-replicas', Math.min(100, Math.max(1, Math.round(value))))
   }
-  emit('update-respin-replicas', current - 1)
 }
 
 function disableRespin(): void {
@@ -89,50 +79,22 @@ function formatRespinLabel(text: string): string {
           <div class="entry-item-info">
             <span class="entry-color-indicator" :style="{ backgroundColor: entry.color }" />
             <span class="entry-label" :title="entry.text">{{ entry.text.toUpperCase() }}</span>
-            <span class="entry-replicas-count">x{{ entry.replicas }}</span>
           </div>
 
           <div class="entry-item-actions">
-            <button
-              type="button"
-              class="brutalist-btn btn-small btn-yellow action-icon-btn"
-              :class="{ 'is-locked': disabled }"
-              :aria-label="`Decrease ${entry.text} replicas`"
-              @click="decrementEntry(entry)"
-            >
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="square"
-              >
-                <line x1="2" y1="8" x2="14" y2="8" />
-              </svg>
-            </button>
-
-            <button
-              type="button"
-              class="brutalist-btn btn-small btn-yellow action-icon-btn"
-              :class="{ 'is-locked': disabled }"
-              :aria-label="`Increase ${entry.text} replicas`"
-              @click="incrementEntry(entry)"
-            >
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="square"
-              >
-                <line x1="8" y1="2" x2="8" y2="14" />
-                <line x1="2" y1="8" x2="14" y2="8" />
-              </svg>
-            </button>
+            <BauhausCounter
+              :id="`${embedded ? 'mobile-' : ''}entry-replicas-${entry.id}`"
+              compact
+              :model-value="entry.replicas"
+              :min="1"
+              :max="100"
+              :step="1"
+              :readonly="disabled"
+              :aria-label="`${entry.text} replicas`"
+              :decrement-label="`Decrease ${entry.text} replicas`"
+              :increment-label="`Increase ${entry.text} replicas`"
+              @update:model-value="onEntryReplicasUpdate(entry.id, $event)"
+            />
 
             <button
               type="button"
@@ -142,8 +104,8 @@ function formatRespinLabel(text: string): string {
               @click="deleteEntry(entry.id)"
             >
               <svg
-                width="10"
-                height="10"
+                width="11"
+                height="11"
                 viewBox="0 0 16 16"
                 fill="none"
                 stroke="currentColor"
@@ -179,50 +141,22 @@ function formatRespinLabel(text: string): string {
               </svg>
             </span>
             <span class="entry-label respin-label">{{ formatRespinLabel(respin.text) }}</span>
-            <span class="entry-replicas-count">x{{ respin.replicas }}</span>
           </div>
 
           <div class="entry-item-actions">
-            <button
-              type="button"
-              class="brutalist-btn btn-small btn-yellow action-icon-btn"
-              :class="{ 'is-locked': disabled }"
-              aria-label="Decrease respin replicas"
-              @click="decrementRespin(respin.replicas)"
-            >
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="square"
-              >
-                <line x1="2" y1="8" x2="14" y2="8" />
-              </svg>
-            </button>
-
-            <button
-              type="button"
-              class="brutalist-btn btn-small btn-yellow action-icon-btn"
-              :class="{ 'is-locked': disabled }"
-              aria-label="Increase respin replicas"
-              @click="incrementRespin(respin.replicas)"
-            >
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="square"
-              >
-                <line x1="8" y1="2" x2="8" y2="14" />
-                <line x1="2" y1="8" x2="14" y2="8" />
-              </svg>
-            </button>
+            <BauhausCounter
+              :id="`${embedded ? 'mobile-' : ''}respin-replicas`"
+              compact
+              :model-value="respin.replicas"
+              :min="1"
+              :max="100"
+              :step="1"
+              :readonly="disabled"
+              aria-label="Respin replicas"
+              decrement-label="Decrease respin replicas"
+              increment-label="Increase respin replicas"
+              @update:model-value="onRespinReplicasUpdate"
+            />
 
             <button
               type="button"
@@ -232,8 +166,8 @@ function formatRespinLabel(text: string): string {
               @click="disableRespin"
             >
               <svg
-                width="10"
-                height="10"
+                width="11"
+                height="11"
                 viewBox="0 0 16 16"
                 fill="none"
                 stroke="currentColor"
@@ -349,7 +283,7 @@ function formatRespinLabel(text: string): string {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0.85rem;
+  padding: 0.35rem 0.85rem;
   border-bottom: 2px solid var(--primary);
   background-color: var(--white);
   gap: 1rem;
@@ -395,16 +329,6 @@ function formatRespinLabel(text: string): string {
   white-space: nowrap;
 }
 
-.entry-replicas-count {
-  font-size: 0.85rem;
-  color: #666;
-  background-color: var(--background);
-  padding: 0.1rem 0.4rem;
-  border: 1px solid var(--primary);
-  font-weight: 500;
-  flex-shrink: 0;
-}
-
 .entry-item-actions {
   display: flex;
   align-items: center;
@@ -413,8 +337,8 @@ function formatRespinLabel(text: string): string {
 }
 
 .action-icon-btn {
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   padding: 0;
   display: inline-flex;
   align-items: center;
@@ -443,12 +367,17 @@ function formatRespinLabel(text: string): string {
   }
 
   .entry-item {
-    padding: 0.5rem 0.75rem;
+    padding: 0.35rem 0.75rem;
     gap: 0.5rem;
   }
 
   .entry-item-info {
     gap: 0.5rem;
+  }
+
+  .action-icon-btn {
+    width: 36px;
+    height: 36px;
   }
 }
 </style>

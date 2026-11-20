@@ -9,7 +9,6 @@ const props = defineProps<{
 const emit = defineEmits<{
   'add-entry': [payload: { text: string; replicas: number }]
   'toggle-respin': [active: boolean]
-  'update-respin-replicas': [replicas: number]
   'open-presets': []
   'open-settings': []
 }>()
@@ -52,15 +51,6 @@ function onEntryTextInput(): void {
 function onEntryReplicasUpdate(value: number): void {
   if (typeof value === 'number' && !Number.isNaN(value)) {
     entryReplicas.value = Math.min(100, Math.max(1, Math.round(value)))
-  }
-}
-
-function onRespinReplicasUpdate(value: number): void {
-  if (props.isSpinning) {
-    return
-  }
-  if (typeof value === 'number' && !Number.isNaN(value)) {
-    emit('update-respin-replicas', Math.min(100, Math.max(1, Math.round(value))))
   }
 }
 
@@ -140,20 +130,6 @@ function onToggleRespin(checked: boolean): void {
         </div>
         <p class="card-desc respin-subtitle">Landing on this triggers auto-respin</p>
       </div>
-
-      <BauhausCounter
-        v-if="props.respin.active"
-        id="respin-replicas"
-        label="RESPIN REPLICAS"
-        :model-value="props.respin.replicas"
-        :min="1"
-        :max="100"
-        :step="1"
-        :readonly="isSpinning"
-        decrement-label="Decrease respin replicas"
-        increment-label="Increase respin replicas"
-        @update:model-value="onRespinReplicasUpdate"
-      />
     </div>
 
     <div class="button-row">

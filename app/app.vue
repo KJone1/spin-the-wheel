@@ -257,7 +257,6 @@ function handleWinner(slice: WheelSlice): void {
         :is-spinning="isSpinning"
         @add-entry="addEntry"
         @toggle-respin="toggleRespin"
-        @update-respin-replicas="updateRespinReplicas"
         @open-presets="presetsOpen = true"
         @open-settings="settingsOpen = true"
       >
