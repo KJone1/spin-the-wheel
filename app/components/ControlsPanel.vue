@@ -13,47 +13,6 @@ const emit = defineEmits<{
   'open-settings': []
 }>()
 
-const entryText = ref('')
-const entryReplicas = ref<number>(1)
-const textError = ref(false)
-const textInputRef = ref<HTMLInputElement | null>(null)
-
-function onSubmitEntry(): void {
-  if (props.isSpinning) {
-    return
-  }
-
-  const trimmed = entryText.value.trim().toUpperCase()
-  if (!trimmed) {
-    textError.value = true
-    textInputRef.value?.focus()
-    return
-  }
-
-  const count =
-    typeof entryReplicas.value === 'number' && !Number.isNaN(entryReplicas.value)
-      ? Math.min(100, Math.max(1, Math.round(entryReplicas.value)))
-      : 1
-
-  emit('add-entry', { text: trimmed, replicas: count })
-  entryText.value = ''
-  entryReplicas.value = 1
-  textError.value = false
-  textInputRef.value?.focus()
-}
-
-function onEntryTextInput(): void {
-  if (textError.value) {
-    textError.value = false
-  }
-}
-
-function onEntryReplicasUpdate(value: number): void {
-  if (typeof value === 'number' && !Number.isNaN(value)) {
-    entryReplicas.value = Math.min(100, Math.max(1, Math.round(value)))
-  }
-}
-
 function onToggleRespin(checked: boolean): void {
   if (props.isSpinning) {
     return
@@ -64,47 +23,15 @@ function onToggleRespin(checked: boolean): void {
 
 <template>
   <section class="controls-column">
-    <div class="brutalist-card border-black entry-card">
-      <form class="entry-form" novalidate @submit.prevent="onSubmitEntry">
-        <div class="input-group">
-          <label for="entry-text" class="card-title entry-title-label">NEW ENTRY</label>
-          <input
-            id="entry-text"
-            ref="textInputRef"
-            v-model="entryText"
-            type="text"
-            placeholder="TYPE SOMETHING..."
-            autocomplete="off"
-            :aria-invalid="textError"
-            :aria-describedby="textError ? 'entry-text-error' : undefined"
-            @input="onEntryTextInput"
-          >
-          <div v-if="textError" id="entry-text-error" role="alert" class="custom-validation-bubble">
-            PLEASE GIVE A NAME TO YOUR ENTRY
-          </div>
-        </div>
-
-        <BauhausCounter
-          id="entry-replicas"
-          label="REPLICAS"
-          :model-value="entryReplicas"
-          :min="1"
-          :max="100"
-          :step="1"
-          decrement-label="Decrease replicas"
-          increment-label="Increase replicas"
-          @update:model-value="onEntryReplicasUpdate"
-        />
-
-        <button
-          type="submit"
-          class="brutalist-btn btn-yellow"
-          :class="{ 'is-locked': isSpinning }"
-        >
-          ADD TO WHEEL
-        </button>
-      </form>
+    <div class="column-header">
+      <h2>CONTROLS</h2>
     </div>
+
+    <AddEntryForm
+      id="entry-text"
+      :is-spinning="isSpinning"
+      @add-entry="emit('add-entry', $event)"
+    />
 
     <slot />
 
@@ -161,22 +88,17 @@ function onToggleRespin(checked: boolean): void {
   min-height: 0;
 }
 
-.entry-card {
+.column-header {
   flex-shrink: 0;
-  padding: 1.25rem;
+  border-bottom: var(--border);
+  padding-bottom: 0.5rem;
 }
 
-.input-group .entry-title-label {
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  line-height: 1.2;
-}
-
-.entry-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.column-header h2 {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .respin-card {

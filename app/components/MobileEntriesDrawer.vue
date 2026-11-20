@@ -20,9 +20,7 @@ const emit = defineEmits<{
 }>()
 
 const isOpen = ref(false)
-const entryText = ref('')
-const textError = ref(false)
-const textInputRef = ref<HTMLInputElement | null>(null)
+const addFormRef = ref<{ clearError: () => void } | null>(null)
 
 let desktopMediaQuery: MediaQueryList | null = null
 
@@ -43,36 +41,13 @@ onBeforeUnmount(() => {
 
 watch(isOpen, open => {
   if (!open) {
-    textError.value = false
+    addFormRef.value?.clearError()
   }
 })
 
 function openDrawer(): void {
   if (!isOpen.value) {
     isOpen.value = true
-  }
-}
-
-function onSubmitEntry(): void {
-  if (props.isSpinning) {
-    return
-  }
-
-  const trimmed = entryText.value.trim().toUpperCase()
-  if (!trimmed) {
-    textError.value = true
-    textInputRef.value?.focus()
-    return
-  }
-
-  emit('add-entry', { text: trimmed, replicas: 1 })
-  entryText.value = ''
-  textError.value = false
-}
-
-function onEntryTextInput(): void {
-  if (textError.value) {
-    textError.value = false
   }
 }
 
@@ -161,42 +136,13 @@ function onOpenSettings(): void {
                 </DrawerDescription>
 
                 <div class="drawer-body">
-                  <form
-                    class="mobile-add-form"
-                    data-reka-swipe-ignore
-                    novalidate
-                    @submit.prevent="onSubmitEntry"
-                  >
-                    <input
-                      id="mobile-entry-text"
-                      ref="textInputRef"
-                      v-model="entryText"
-                      type="text"
-                      class="mobile-add-input"
-                      placeholder="TYPE NEW ENTRY..."
-                      aria-label="New entry name"
-                      autocomplete="off"
-                      :aria-invalid="textError"
-                      :aria-describedby="textError ? 'mobile-entry-text-error' : undefined"
-                      @input="onEntryTextInput"
-                    >
-                    <button
-                      type="submit"
-                      class="brutalist-btn btn-yellow mobile-add-btn"
-                      :class="{ 'is-locked': isSpinning }"
-                      @mousedown.prevent
-                    >
-                      + ADD
-                    </button>
-                    <div
-                      v-if="textError"
-                      id="mobile-entry-text-error"
-                      role="alert"
-                      class="custom-validation-bubble"
-                    >
-                      PLEASE GIVE A NAME TO YOUR ENTRY
-                    </div>
-                  </form>
+                  <AddEntryForm
+                    id="mobile-entry-text"
+                    ref="addFormRef"
+                    :is-spinning="isSpinning"
+                    embedded
+                    @add-entry="emit('add-entry', $event)"
+                  />
 
                   <ActiveEntries
                     :entries="entries"
@@ -371,47 +317,6 @@ function onOpenSettings(): void {
   gap: 0.85rem;
   padding: 0.9rem 0.9rem max(0.9rem, env(safe-area-inset-bottom));
   overflow: hidden;
-}
-
-.mobile-add-form {
-  flex-shrink: 0;
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: var(--white);
-  border: var(--border);
-  box-shadow: 4px 4px 0px 0px var(--primary);
-  padding: 0.4rem 0.45rem 0.4rem 0.75rem;
-}
-
-.mobile-add-form:focus-within {
-  box-shadow: 0 0 0 3px var(--accent-blue), 4px 4px 0px 0px var(--primary);
-}
-
-.mobile-add-input {
-  flex: 1;
-  min-width: 0;
-  border: none;
-  background-color: transparent;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--primary);
-  outline: none;
-  padding: 0.25rem 0;
-}
-
-.mobile-add-btn {
-  flex-shrink: 0;
-  padding: 0.45rem 0.85rem;
-  font-size: 0.85rem;
-  box-shadow: 3px 3px 0px 0px var(--primary);
-}
-
-.mobile-add-btn:active:not(:disabled):not(.is-locked) {
-  transform: translate(3px, 3px);
-  box-shadow: 0px 0px 0px 0px var(--primary);
 }
 
 .mobile-respin-card {
