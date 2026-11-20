@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt build",
+    "deploy": "npm run build && wrangler deploy",
     "preview": "wrangler dev",
     "postinstall": "nuxt prepare",
     "db:migrate:local": "wrangler d1 migrations apply DB --local",
@@ -27,5 +28,8 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261120.1",
     "wrangler": "^4.165.0"
+  },
+  "allowScripts": {
+    "workerd@1.20261118.1": true
   }
 }

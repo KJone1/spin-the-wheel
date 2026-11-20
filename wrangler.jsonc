@@ -8,11 +8,17 @@
     "directory": ".output/public",
     "binding": "ASSETS"
   },
+  "routes": [
+    {
+      "pattern": "spin.chxf.uk",
+      "custom_domain": true
+    }
+  ],
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "spin-the-wheel-db",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "858a1390-60f4-47e8-8fff-37f8d730c5a3",
       "migrations_dir": "db/migrations"
     }
   ]
