@@ -6,6 +6,7 @@ import type {
   WheelEntry,
   WheelSlice
 } from '~~/shared/types/wheel'
+import { playTickSound } from '~/utils/sound'
 
 const { data: bootstrap, error } = await useFetch<BootstrapPayload>('/api/bootstrap')
 
@@ -45,6 +46,11 @@ const colorIndex = ref<number>(entries.value.length % sliceColors.length)
 const isDefaultState = ref<boolean>(defaultPreset.isDefault)
 const isSpinning = ref<boolean>(false)
 const slices = ref<WheelSlice[]>([])
+
+const presetsOpen = ref(false)
+const settingsOpen = ref(false)
+const winnerOpen = ref(false)
+const currentWinner = ref<WheelSlice | null>(null)
 
 function buildInterleavedSlices(): WheelSlice[] {
   const buckets: WheelSlice[][] = []
@@ -101,10 +107,85 @@ watch(
   { deep: true, immediate: true }
 )
 
-const lastWinner = ref<WheelSlice | null>(null)
+function addEntry(payload: { text: string; replicas: number }): void {
+  if (isDefaultState.value) {
+    entries.value = []
+    isDefaultState.value = false
+  }
+
+  const color = sliceColors[colorIndex.value] ?? '#ffcc00'
+  colorIndex.value = (colorIndex.value + 1) % sliceColors.length
+
+  entries.value.push({
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    text: payload.text,
+    replicas: payload.replicas,
+    color
+  })
+}
+
+function updateEntryReplicas(id: string, replicas: number): void {
+  const target = entries.value.find(entry => entry.id === id)
+  if (!target) {
+    return
+  }
+  target.replicas = replicas
+  isDefaultState.value = false
+}
+
+function deleteEntry(id: string): void {
+  entries.value = entries.value.filter(entry => entry.id !== id)
+  isDefaultState.value = false
+}
+
+function toggleRespin(active: boolean): void {
+  respin.active = active
+}
+
+function updateRespinReplicas(replicas: number): void {
+  respin.replicas = replicas
+}
+
+function disableRespin(): void {
+  respin.active = false
+}
+
+function shuffleSlices(): void {
+  if (slices.value.length <= 1) {
+    return
+  }
+
+  const next = [...slices.value]
+  for (let i = next.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const temp = next[i]!
+    next[i] = next[j]!
+    next[j] = temp
+  }
+
+  slices.value = next
+  playTickSound(1200, 0.08)
+  setTimeout(() => playTickSound(1500, 0.08), 50)
+}
+
+function applyPreset(preset: Preset): void {
+  entries.value = mapPresetEntries(preset)
+  respin.active = preset.respinActive
+  respin.replicas = preset.respinReplicas
+  isDefaultState.value = preset.isDefault
+  colorIndex.value = entries.value.length % sliceColors.length
+
+  playTickSound(1000, 0.1)
+  setTimeout(() => playTickSound(1300, 0.15), 100)
+}
+
+function handleSettingsSaved(nextDuration: number): void {
+  spinDuration.value = nextDuration
+}
 
 function handleWinner(slice: WheelSlice): void {
-  lastWinner.value = slice
+  currentWinner.value = slice
+  winnerOpen.value = true
 }
 </script>
 
@@ -128,8 +209,48 @@ function handleWinner(slice: WheelSlice): void {
             <div class="wheel-placeholder" />
           </template>
         </ClientOnly>
+
+        <ActiveEntries
+          :entries="entries"
+          :respin="respin"
+          :total-slices="slices.length"
+          :disabled="isSpinning"
+          @update-replicas="updateEntryReplicas"
+          @delete-entry="deleteEntry"
+          @update-respin-replicas="updateRespinReplicas"
+          @disable-respin="disableRespin"
+        />
       </section>
+
+      <ControlsPanel
+        :respin="respin"
+        :is-spinning="isSpinning"
+        :can-shuffle="slices.length > 1"
+        @add-entry="addEntry"
+        @toggle-respin="toggleRespin"
+        @update-respin-replicas="updateRespinReplicas"
+        @shuffle="shuffleSlices"
+        @open-presets="presetsOpen = true"
+        @open-settings="settingsOpen = true"
+      />
     </main>
+
+    <PresetsModal
+      v-model:open="presetsOpen"
+      :presets="presets"
+      @apply="applyPreset"
+    />
+
+    <SettingsModal
+      v-model:open="settingsOpen"
+      :spin-duration="spinDuration"
+      @saved="handleSettingsSaved"
+    />
+
+    <WinnerModal
+      v-model:open="winnerOpen"
+      :winner="currentWinner"
+    />
   </div>
 </template>
 
