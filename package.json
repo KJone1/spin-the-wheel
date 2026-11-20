@@ -1,26 +1,31 @@
 {
   "name": "spin-the-wheel",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Could not find a decent spin the wheel website, so I vibecoded one for myself so I can offload hard decisions to luck.",
-  "main": "app.js",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "wrangler dev",
+    "postinstall": "nuxt prepare",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "db:seed:local": "wrangler d1 execute DB --local --file=db/seed.sql",
+    "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "db:seed:remote": "wrangler d1 execute DB --remote --file=db/seed.sql"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KJone1/spin-the-wheel.git"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/KJone1/spin-the-wheel/issues"
+  "dependencies": {
+    "nuxt": "^4.6.4",
+    "reka-ui": "^2.11.0",
+    "vue": "latest"
   },
-  "homepage": "https://github.com/KJone1/spin-the-wheel#readme",
   "devDependencies": {
-    "vite": "^8.0.16"
+    "@cloudflare/workers-types": "^5.20261120.1",
+    "wrangler": "^4.165.0"
   }
 }
