@@ -6,6 +6,7 @@ const props = defineProps<{
   respin: RespinConfig
   totalSlices: number
   isSpinning: boolean
+  canShuffle: boolean
 }>()
 
 const emit = defineEmits<{
@@ -15,6 +16,7 @@ const emit = defineEmits<{
   'toggle-respin': [active: boolean]
   'update-respin-replicas': [replicas: number]
   'disable-respin': []
+  shuffle: []
   'open-presets': []
   'open-settings': []
 }>()
@@ -59,6 +61,13 @@ function onToggleRespin(checked: boolean): void {
     emit('update-respin-replicas', 1)
   }
   emit('toggle-respin', checked)
+}
+
+function onShuffle(): void {
+  if (props.isSpinning || !props.canShuffle) {
+    return
+  }
+  emit('shuffle')
 }
 
 function onOpenPresets(): void {
@@ -181,6 +190,14 @@ function onOpenSettings(): void {
                   </div>
 
                   <div class="mobile-util-buttons">
+                    <button
+                      type="button"
+                      class="brutalist-btn btn-yellow mobile-util-btn mobile-shuffle-btn"
+                      :class="{ 'is-locked': isSpinning || !canShuffle }"
+                      @click="onShuffle"
+                    >
+                      SHUFFLE
+                    </button>
                     <button
                       type="button"
                       class="brutalist-btn btn-yellow mobile-util-btn"
@@ -336,6 +353,10 @@ function onOpenSettings(): void {
   width: 100%;
   padding: 0.65rem 0.75rem;
   font-size: 0.95rem;
+}
+
+.mobile-shuffle-btn {
+  grid-column: 1 / -1;
 }
 
 .respin-header {

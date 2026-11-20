@@ -6,13 +6,11 @@ const props = defineProps<{
   slices: WheelSlice[]
   spinDuration: number
   autoRespinDelayMs: number
-  canShuffle: boolean
 }>()
 
 const emit = defineEmits<{
   'update:spinning': [value: boolean]
   winner: [slice: WheelSlice]
-  shuffle: []
 }>()
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
@@ -294,13 +292,6 @@ function onCanvasClick(event: MouseEvent): void {
   startSpin()
 }
 
-function onShuffle(): void {
-  if (isSpinning.value || !props.canShuffle) {
-    return
-  }
-  emit('shuffle')
-}
-
 watch(
   () => props.slices,
   () => {
@@ -349,28 +340,17 @@ onBeforeUnmount(() => {
   </div>
 
   <div class="spin-action-area">
-    <div class="spin-btn-wrap">
-      <button
-        type="button"
-        class="brutalist-btn spin-btn"
-        :class="{
-          'is-spinning': isSpinning,
-          'respin-flash': isAutoRespinning,
-          'is-locked': isSpinning || slices.length === 0
-        }"
-        @click="startSpin"
-      >
-        {{ isAutoRespinning ? 'HERE WE GO AGAIN...' : isSpinning ? 'SPINNING...' : 'SPIN!' }}
-      </button>
-    </div>
-
     <button
       type="button"
-      class="brutalist-btn shuffle-btn"
-      :class="{ 'is-locked': isSpinning || !canShuffle }"
-      @click="onShuffle"
+      class="brutalist-btn spin-btn"
+      :class="{
+        'is-spinning': isSpinning,
+        'respin-flash': isAutoRespinning,
+        'is-locked': isSpinning || slices.length === 0
+      }"
+      @click="startSpin"
     >
-      SHUFFLE
+      {{ isAutoRespinning ? 'HERE WE GO AGAIN...' : isSpinning ? 'SPINNING...' : 'SPIN!' }}
     </button>
   </div>
 </template>
@@ -437,14 +417,6 @@ onBeforeUnmount(() => {
 
 .spin-action-area {
   width: min(100%, max(320px, calc(100dvh - 320px)));
-  display: flex;
-  align-items: stretch;
-  gap: 1rem;
-}
-
-.spin-btn-wrap {
-  flex: 1;
-  min-width: 0;
   container-type: inline-size;
 }
 
@@ -497,34 +469,6 @@ onBeforeUnmount(() => {
   border-color: var(--primary);
 }
 
-.shuffle-btn {
-  height: 78px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 1.5rem;
-  font-size: 1.15rem;
-  box-shadow: var(--shadow);
-  letter-spacing: 0.5px;
-}
-
-@media (hover: hover) {
-  .shuffle-btn:hover:not(:disabled):not(.is-locked) {
-    background-color: var(--primary);
-    color: var(--white);
-    box-shadow: var(--shadow-hover);
-    transform: translate(-3px, -3px);
-  }
-}
-
-.shuffle-btn:active:not(:disabled):not(.is-locked) {
-  background-color: var(--primary);
-  color: var(--white);
-  transform: translate(6px, 6px);
-  box-shadow: 0px 0px 0px 0px var(--primary);
-}
-
 @media (max-width: 900px) {
   .wheel-wrapper {
     margin-bottom: 0.25rem;
@@ -537,10 +481,6 @@ onBeforeUnmount(() => {
 
   .wheel-outer-ring {
     padding: 4px;
-  }
-
-  .spin-action-area {
-    gap: 0.75rem;
   }
 
   .spin-btn {
@@ -557,12 +497,6 @@ onBeforeUnmount(() => {
   .spin-btn.respin-flash:hover,
   .spin-btn.respin-flash:active {
     font-size: clamp(0.75rem, 6.5cqi, 1.65rem);
-  }
-
-  .shuffle-btn {
-    height: 76px;
-    padding: 0 1.15rem;
-    font-size: 1.05rem;
   }
 }
 </style>

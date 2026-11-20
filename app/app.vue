@@ -224,10 +224,8 @@ function handleWinner(slice: WheelSlice): void {
             :slices="slices"
             :spin-duration="spinDuration"
             :auto-respin-delay-ms="autoRespinDelayMs"
-            :can-shuffle="slices.length > 1"
             @update:spinning="isSpinning = $event"
             @winner="handleWinner"
-            @shuffle="shuffleSlices"
           />
           <template #fallback>
             <div class="wheel-placeholder" />
@@ -238,8 +236,10 @@ function handleWinner(slice: WheelSlice): void {
       <ControlsPanel
         :respin="respin"
         :is-spinning="isSpinning"
+        :can-shuffle="slices.length > 1"
         @add-entry="addEntry"
         @toggle-respin="toggleRespin"
+        @shuffle="shuffleSlices"
         @open-presets="presetsOpen = true"
         @open-settings="settingsOpen = true"
       >
@@ -261,12 +261,14 @@ function handleWinner(slice: WheelSlice): void {
       :respin="respin"
       :total-slices="slices.length"
       :is-spinning="isSpinning"
+      :can-shuffle="slices.length > 1"
       @add-entry="addEntry"
       @update-replicas="updateEntryReplicas"
       @delete-entry="deleteEntry"
       @toggle-respin="toggleRespin"
       @update-respin-replicas="updateRespinReplicas"
       @disable-respin="disableRespin"
+      @shuffle="shuffleSlices"
       @open-presets="presetsOpen = true"
       @open-settings="settingsOpen = true"
     />

@@ -4,11 +4,13 @@ import type { RespinConfig } from '~~/shared/types/wheel'
 const props = defineProps<{
   respin: RespinConfig
   isSpinning: boolean
+  canShuffle: boolean
 }>()
 
 const emit = defineEmits<{
   'add-entry': [payload: { text: string; replicas: number }]
   'toggle-respin': [active: boolean]
+  shuffle: []
   'open-presets': []
   'open-settings': []
 }>()
@@ -18,6 +20,13 @@ function onToggleRespin(checked: boolean): void {
     return
   }
   emit('toggle-respin', checked)
+}
+
+function onShuffle(): void {
+  if (props.isSpinning || !props.canShuffle) {
+    return
+  }
+  emit('shuffle')
 }
 </script>
 
@@ -60,6 +69,14 @@ function onToggleRespin(checked: boolean): void {
     </div>
 
     <div class="button-row">
+      <button
+        type="button"
+        class="brutalist-btn btn-yellow"
+        :class="{ 'is-locked': isSpinning || !canShuffle }"
+        @click="onShuffle"
+      >
+        SHUFFLE
+      </button>
       <button
         type="button"
         class="brutalist-btn btn-yellow"
