@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import type { RespinConfig, WheelEntry } from '~~/shared/types/wheel'
 
-const props = defineProps<{
-  entries: WheelEntry[]
-  respin: RespinConfig
-  totalSlices: number
-  disabled: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    entries: WheelEntry[]
+    respin: RespinConfig
+    totalSlices: number
+    disabled: boolean
+    embedded?: boolean
+  }>(),
+  {
+    embedded: false
+  }
+)
 
 const emit = defineEmits<{
   'update-replicas': [id: string, replicas: number]
@@ -63,13 +69,20 @@ function formatRespinLabel(text: string): string {
 </script>
 
 <template>
-  <div class="brutalist-card border-black active-entries-card">
-    <div class="card-header-row">
+  <div
+    class="active-entries-card"
+    :class="embedded ? 'is-embedded' : 'brutalist-card border-black'"
+  >
+    <div v-if="!embedded" class="card-header-row">
       <h3 class="card-title">ACTIVE ENTRIES</h3>
       <span class="badge">{{ totalSlices }} SLICES</span>
     </div>
 
-    <ScrollAreaRoot type="auto" class="entries-scroll-root">
+    <p v-if="entries.length === 0 && !respin.active" class="empty-entries-note">
+      NO ENTRIES YET
+    </p>
+
+    <ScrollAreaRoot v-else type="auto" class="entries-scroll-root">
       <ScrollAreaViewport class="entries-scroll-viewport">
         <ul class="entries-list">
         <li v-for="entry in entries" :key="entry.id" class="entry-item">
@@ -252,6 +265,13 @@ function formatRespinLabel(text: string): string {
   gap: 0.65rem;
 }
 
+.active-entries-card.is-embedded {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  gap: 0;
+}
+
 .card-header-row {
   flex-shrink: 0;
   display: flex;
@@ -263,6 +283,19 @@ function formatRespinLabel(text: string): string {
 
 .card-header-row .card-title {
   margin-bottom: 0;
+}
+
+.empty-entries-note {
+  flex-shrink: 0;
+  border: 2px solid var(--primary);
+  background-color: var(--white);
+  padding: 0.85rem;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
 }
 
 .entries-scroll-root {
@@ -394,23 +427,23 @@ function formatRespinLabel(text: string): string {
 }
 
 @media (max-width: 900px) {
-  .active-entries-card {
+  .active-entries-card:not(.is-embedded) {
     flex: none;
     min-height: auto;
     padding: 1rem;
   }
 
-  .entries-scroll-root {
+  .active-entries-card:not(.is-embedded) .entries-scroll-root {
     flex: none;
   }
 
-  .entries-scroll-root :deep(.entries-scroll-viewport) {
+  .active-entries-card:not(.is-embedded) .entries-scroll-root :deep(.entries-scroll-viewport) {
     height: auto;
     max-height: 250px;
   }
 
   .entry-item {
-    padding: 0.65rem 0.75rem;
+    padding: 0.5rem 0.75rem;
     gap: 0.5rem;
   }
 

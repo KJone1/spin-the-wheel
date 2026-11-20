@@ -233,6 +233,23 @@ function handleWinner(slice: WheelSlice): void {
             <div class="wheel-placeholder" />
           </template>
         </ClientOnly>
+
+        <div class="mobile-util-row">
+          <button
+            type="button"
+            class="brutalist-btn btn-yellow"
+            @click="presetsOpen = true"
+          >
+            PRESETS
+          </button>
+          <button
+            type="button"
+            class="brutalist-btn btn-yellow"
+            @click="settingsOpen = true"
+          >
+            SETTINGS
+          </button>
+        </div>
       </section>
 
       <ControlsPanel
@@ -256,6 +273,19 @@ function handleWinner(slice: WheelSlice): void {
         />
       </ControlsPanel>
     </main>
+
+    <MobileEntriesDrawer
+      :entries="entries"
+      :respin="respin"
+      :total-slices="slices.length"
+      :is-spinning="isSpinning"
+      @add-entry="addEntry"
+      @update-replicas="updateEntryReplicas"
+      @delete-entry="deleteEntry"
+      @toggle-respin="toggleRespin"
+      @update-respin-replicas="updateRespinReplicas"
+      @disable-respin="disableRespin"
+    />
 
     <PresetsModal
       v-model:open="presetsOpen"
@@ -341,32 +371,60 @@ function handleWinner(slice: WheelSlice): void {
   background-color: var(--background);
 }
 
+.mobile-util-row {
+  display: none;
+}
+
 @media (max-width: 900px) {
   .app-container {
-    height: auto;
-    min-height: 0;
-    gap: 2rem;
+    height: calc(100dvh - 0.65rem - max(0.65rem, env(safe-area-inset-bottom)));
+    min-height: 540px;
+    gap: 0.75rem;
   }
 
   .app-header {
-    padding: 1rem 1.25rem;
+    padding: 0.9rem 0.65rem;
     text-align: center;
   }
 
+  .logo-text {
+    font-size: clamp(1.15rem, 7.9cqi, 3.5rem);
+    letter-spacing: -0.03em;
+  }
+
   .main-layout {
-    flex: none;
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto;
-    gap: 2rem;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
   }
 
   .wheel-column {
-    padding: 1.5rem;
-    gap: 2rem;
+    flex: 1;
+    min-height: 0;
+    padding: 0.75rem 0.65rem;
+    gap: 0.65rem;
   }
 
   .wheel-placeholder {
-    width: min(100%, 600px);
+    width: min(100%, 520px, max(220px, calc(100dvh - 390px)));
+  }
+
+  .mobile-util-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+    width: min(100%, 520px, max(220px, calc(100dvh - 390px)));
+  }
+
+  .mobile-util-row .brutalist-btn {
+    height: 46px;
+    padding: 0 1rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>

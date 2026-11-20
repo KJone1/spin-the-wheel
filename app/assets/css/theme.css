@@ -342,6 +342,98 @@ body {
   padding-top: 1rem;
 }
 
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(26, 26, 26, 0.72);
+  z-index: 90;
+}
+
+.drawer-overlay[data-state='open'] {
+  animation: drawer-fade-in 200ms ease-out;
+}
+
+.drawer-overlay[data-state='closed'] {
+  animation: drawer-fade-out 180ms ease-in forwards;
+}
+
+.drawer-viewport {
+  position: fixed;
+  inset: 0;
+  z-index: 91;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+  padding-bottom: var(--drawer-keyboard-inset, 0px);
+}
+
+.drawer-content {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 600px;
+  max-height: min(85dvh, calc(100dvh - var(--drawer-keyboard-inset, 0px) - 1rem));
+  background-color: var(--background);
+  border-top: var(--border);
+  border-left: var(--border);
+  border-right: var(--border);
+  display: flex;
+  flex-direction: column;
+  outline: none;
+  overflow: hidden;
+  transform: translateY(var(--drawer-swipe-movement-y, 0px));
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.drawer-content[data-swiping] {
+  transition: none;
+}
+
+.drawer-content[data-state='open'] {
+  animation: drawer-slide-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.drawer-content[data-state='closed'] {
+  animation: drawer-slide-out calc(200ms * var(--drawer-swipe-strength, 1)) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes drawer-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes drawer-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes drawer-slide-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes drawer-slide-out {
+  from {
+    transform: translateY(var(--drawer-swipe-movement-y, 0px));
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -356,10 +448,18 @@ body {
 
 @media (max-width: 900px) {
   body {
-    padding: 1rem;
+    padding: 0.65rem 0.65rem max(0.65rem, env(safe-area-inset-bottom));
+    min-height: 100dvh;
   }
 
   .modal-content {
     width: calc(100% - 2rem);
+  }
+}
+
+@media (max-width: 600px) {
+  .drawer-content {
+    border-left: none;
+    border-right: none;
   }
 }

@@ -526,18 +526,42 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 900px) {
+  .wheel-wrapper {
+    margin-bottom: 0.25rem;
+  }
+
   .wheel-outer-ring,
   .spin-action-area {
-    width: min(100%, 600px);
+    width: min(100%, 520px, max(220px, calc(100dvh - 390px)));
+  }
+
+  .wheel-outer-ring {
+    padding: 4px;
   }
 
   .spin-action-area {
-    gap: 0.75rem;
+    gap: 0.65rem;
+  }
+
+  .spin-btn {
+    height: 60px;
+    font-size: clamp(1.35rem, 11cqi, 2.2rem);
+  }
+
+  .spin-btn.is-spinning {
+    font-size: clamp(0.95rem, 10cqi, 1.9rem);
+  }
+
+  .spin-btn.respin-flash,
+  .spin-btn.respin-flash:hover,
+  .spin-btn.respin-flash:active {
+    font-size: clamp(0.75rem, 6.5cqi, 1.5rem);
   }
 
   .shuffle-btn {
-    padding: 0 1rem;
-    font-size: 0.95rem;
+    height: 60px;
+    padding: 0 0.9rem;
+    font-size: 0.9rem;
   }
 }
 </style>

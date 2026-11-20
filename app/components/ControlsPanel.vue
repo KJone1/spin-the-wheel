@@ -285,14 +285,7 @@ function onToggleRespin(checked: boolean): void {
 
 @media (max-width: 900px) {
   .controls-column {
-    gap: 2rem;
-    height: auto;
-    min-height: 0;
-  }
-
-  .button-row {
-    flex-direction: column;
-    gap: 0.75rem;
+    display: none;
   }
 }
 </style>
