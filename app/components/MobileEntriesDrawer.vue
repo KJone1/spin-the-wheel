@@ -15,6 +15,8 @@ const emit = defineEmits<{
   'toggle-respin': [active: boolean]
   'update-respin-replicas': [replicas: number]
   'disable-respin': []
+  'open-presets': []
+  'open-settings': []
 }>()
 
 const isOpen = ref(false)
@@ -82,6 +84,16 @@ function onToggleRespin(checked: boolean): void {
     emit('update-respin-replicas', 1)
   }
   emit('toggle-respin', checked)
+}
+
+function onOpenPresets(): void {
+  isOpen.value = false
+  emit('open-presets')
+}
+
+function onOpenSettings(): void {
+  isOpen.value = false
+  emit('open-settings')
 }
 </script>
 
@@ -220,6 +232,23 @@ function onToggleRespin(checked: boolean): void {
                       </div>
                       <p class="card-desc respin-subtitle">Landing on this triggers auto-respin</p>
                     </div>
+                  </div>
+
+                  <div class="mobile-util-buttons">
+                    <button
+                      type="button"
+                      class="brutalist-btn btn-yellow mobile-util-btn"
+                      @click="onOpenPresets"
+                    >
+                      PRESETS
+                    </button>
+                    <button
+                      type="button"
+                      class="brutalist-btn btn-yellow mobile-util-btn"
+                      @click="onOpenSettings"
+                    >
+                      SETTINGS
+                    </button>
                   </div>
                 </div>
               </div>
@@ -389,6 +418,19 @@ function onToggleRespin(checked: boolean): void {
   flex-shrink: 0;
   padding: 0.75rem 0.9rem;
   gap: 0.65rem;
+}
+
+.mobile-util-buttons {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.mobile-util-btn {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.95rem;
 }
 
 .respin-header {

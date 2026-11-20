@@ -233,23 +233,6 @@ function handleWinner(slice: WheelSlice): void {
             <div class="wheel-placeholder" />
           </template>
         </ClientOnly>
-
-        <div class="mobile-util-row">
-          <button
-            type="button"
-            class="brutalist-btn btn-util"
-            @click="presetsOpen = true"
-          >
-            PRESETS
-          </button>
-          <button
-            type="button"
-            class="brutalist-btn btn-util"
-            @click="settingsOpen = true"
-          >
-            SETTINGS
-          </button>
-        </div>
       </section>
 
       <ControlsPanel
@@ -284,6 +267,8 @@ function handleWinner(slice: WheelSlice): void {
       @toggle-respin="toggleRespin"
       @update-respin-replicas="updateRespinReplicas"
       @disable-respin="disableRespin"
+      @open-presets="presetsOpen = true"
+      @open-settings="settingsOpen = true"
     />
 
     <PresetsModal
@@ -370,10 +355,6 @@ function handleWinner(slice: WheelSlice): void {
   background-color: var(--background);
 }
 
-.mobile-util-row {
-  display: none;
-}
-
 @media (max-width: 900px) {
   .app-container {
     height: calc(100dvh - 0.65rem - max(0.65rem, env(safe-area-inset-bottom)));
@@ -408,22 +389,6 @@ function handleWinner(slice: WheelSlice): void {
 
   .wheel-placeholder {
     width: min(100%, 520px, max(220px, calc(100dvh - 390px)));
-  }
-
-  .mobile-util-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.65rem;
-    width: min(100%, 520px, max(220px, calc(100dvh - 390px)));
-  }
-
-  .mobile-util-row .brutalist-btn {
-    height: 42px;
-    padding: 0 0.75rem;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 }
 </style>
