@@ -149,7 +149,12 @@ function onToggleRespin(checked: boolean): void {
                 </DrawerDescription>
 
                 <div class="drawer-body">
-                  <form class="mobile-add-form" novalidate @submit.prevent="onSubmitEntry">
+                  <form
+                    class="mobile-add-form"
+                    data-reka-swipe-ignore
+                    novalidate
+                    @submit.prevent="onSubmitEntry"
+                  >
                     <input
                       id="mobile-entry-text"
                       ref="textInputRef"
@@ -167,6 +172,7 @@ function onToggleRespin(checked: boolean): void {
                       type="submit"
                       class="brutalist-btn btn-yellow mobile-add-btn"
                       :class="{ 'is-locked': isSpinning }"
+                      @mousedown.prevent
                     >
                       + ADD
                     </button>
