@@ -239,8 +239,8 @@ function onToggleRespin(checked: boolean): void {
 
 .mobile-sheet-bar {
   width: 100%;
-  background-color: var(--primary);
-  color: var(--accent-yellow);
+  background-color: var(--accent-yellow);
+  color: var(--primary);
   border: var(--border);
   box-shadow: var(--shadow);
   padding: 0.65rem 0.85rem;
@@ -268,9 +268,9 @@ function onToggleRespin(checked: boolean): void {
 
 .sheet-bar-cta {
   flex-shrink: 0;
-  background-color: var(--accent-yellow);
-  color: var(--primary);
-  border: 2px solid var(--accent-yellow);
+  background-color: var(--primary);
+  color: var(--white);
+  border: 2px solid var(--primary);
   padding: 0.3rem 0.65rem;
   font-family: var(--font-heading);
   font-size: 0.8rem;
@@ -283,7 +283,7 @@ function onToggleRespin(checked: boolean): void {
 
 .sheet-bar-cta:active {
   background-color: var(--white);
-  border-color: var(--white);
+  color: var(--primary);
 }
 
 .drawer-shell {

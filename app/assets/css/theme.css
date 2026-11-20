@@ -178,6 +178,30 @@ body {
   color: var(--accent-blue);
 }
 
+.btn-util {
+  background-color: var(--white);
+  color: var(--primary);
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  box-shadow: 2px 2px 0px 0px var(--primary);
+}
+
+@media (hover: hover) {
+  .btn-util:hover:not(:disabled):not(.is-locked) {
+    background-color: var(--primary);
+    color: var(--white);
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px 0px var(--primary);
+  }
+}
+
+.btn-util:active:not(:disabled):not(.is-locked) {
+  background-color: var(--primary);
+  color: var(--white);
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px 0px var(--primary);
+}
+
 .btn-small {
   padding: 0.25rem 0.5rem;
   font-size: 0.8rem;

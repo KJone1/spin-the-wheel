@@ -237,14 +237,14 @@ function handleWinner(slice: WheelSlice): void {
         <div class="mobile-util-row">
           <button
             type="button"
-            class="brutalist-btn btn-yellow"
+            class="brutalist-btn btn-util"
             @click="presetsOpen = true"
           >
             PRESETS
           </button>
           <button
             type="button"
-            class="brutalist-btn btn-yellow"
+            class="brutalist-btn btn-util"
             @click="settingsOpen = true"
           >
             SETTINGS
@@ -413,15 +413,15 @@ function handleWinner(slice: WheelSlice): void {
 
   .mobile-util-row {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 0.65rem;
     width: min(100%, 520px, max(220px, calc(100dvh - 390px)));
   }
 
   .mobile-util-row .brutalist-btn {
-    height: 46px;
-    padding: 0 1rem;
-    font-size: 1rem;
+    height: 42px;
+    padding: 0 0.75rem;
+    font-size: 0.9rem;
     display: flex;
     align-items: center;
     justify-content: center;
