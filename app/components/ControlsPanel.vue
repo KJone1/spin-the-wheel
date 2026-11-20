@@ -22,6 +22,10 @@ const textError = ref(false)
 const textInputRef = ref<HTMLInputElement | null>(null)
 
 function onSubmitEntry(): void {
+  if (props.isSpinning) {
+    return
+  }
+
   const trimmed = entryText.value.trim().toUpperCase()
   if (!trimmed) {
     textError.value = true
@@ -54,13 +58,26 @@ function onEntryReplicasUpdate(value: number): void {
 }
 
 function onRespinReplicasUpdate(value: number): void {
+  if (props.isSpinning) {
+    return
+  }
   if (typeof value === 'number' && !Number.isNaN(value)) {
     emit('update-respin-replicas', Math.min(100, Math.max(1, Math.round(value))))
   }
 }
 
 function onToggleRespin(checked: boolean): void {
+  if (props.isSpinning) {
+    return
+  }
   emit('toggle-respin', checked)
+}
+
+function onShuffle(): void {
+  if (props.isSpinning || !props.canShuffle) {
+    return
+  }
+  emit('shuffle')
 }
 </script>
 
@@ -91,36 +108,25 @@ function onToggleRespin(checked: boolean): void {
           </div>
         </div>
 
-        <NumberFieldRoot
+        <BauhausCounter
           id="entry-replicas"
-          class="input-group"
+          label="REPLICAS"
           :model-value="entryReplicas"
           :min="1"
           :max="100"
           :step="1"
+          decrement-label="Decrease replicas"
+          increment-label="Increase replicas"
           @update:model-value="onEntryReplicasUpdate"
-        >
-          <label for="entry-replicas">REPLICAS</label>
-          <div class="number-field-row">
-            <NumberFieldInput class="number-field-input" />
-            <div class="number-field-steppers">
-              <NumberFieldDecrement
-                class="brutalist-btn btn-small btn-yellow stepper-btn"
-                aria-label="Decrease replicas"
-              >
-                -
-              </NumberFieldDecrement>
-              <NumberFieldIncrement
-                class="brutalist-btn btn-small btn-yellow stepper-btn"
-                aria-label="Increase replicas"
-              >
-                +
-              </NumberFieldIncrement>
-            </div>
-          </div>
-        </NumberFieldRoot>
+        />
 
-        <button type="submit" class="brutalist-btn btn-yellow">ADD TO WHEEL</button>
+        <button
+          type="submit"
+          class="brutalist-btn btn-yellow"
+          :class="{ 'is-locked': isSpinning }"
+        >
+          ADD TO WHEEL
+        </button>
       </form>
     </div>
 
@@ -133,45 +139,34 @@ function onToggleRespin(checked: boolean): void {
           <SwitchRoot
             id="respin-toggle"
             class="brutalist-switch"
+            :class="{ 'is-locked': isSpinning }"
             :model-value="props.respin.active"
-            :disabled="isSpinning"
             @update:model-value="onToggleRespin"
           >
             <SwitchThumb class="brutalist-switch-thumb" />
           </SwitchRoot>
-          <label for="respin-toggle" class="toggle-label">ACTIVATE RESPIN SLICE</label>
+          <label
+            for="respin-toggle"
+            class="toggle-label"
+            :class="{ 'is-locked': isSpinning }"
+          >
+            ACTIVATE RESPIN SLICE
+          </label>
         </div>
 
-        <NumberFieldRoot
+        <BauhausCounter
+          v-if="props.respin.active"
           id="respin-replicas"
-          class="input-group"
-          :class="{ disabled: !props.respin.active }"
+          label="RESPIN REPLICAS"
           :model-value="props.respin.replicas"
           :min="1"
           :max="100"
           :step="1"
-          :disabled="!props.respin.active || isSpinning"
+          :readonly="isSpinning"
+          decrement-label="Decrease respin replicas"
+          increment-label="Increase respin replicas"
           @update:model-value="onRespinReplicasUpdate"
-        >
-          <label for="respin-replicas">RESPIN REPLICAS</label>
-          <div class="number-field-row">
-            <NumberFieldInput class="number-field-input" />
-            <div class="number-field-steppers">
-              <NumberFieldDecrement
-                class="brutalist-btn btn-small btn-yellow stepper-btn"
-                aria-label="Decrease respin replicas"
-              >
-                -
-              </NumberFieldDecrement>
-              <NumberFieldIncrement
-                class="brutalist-btn btn-small btn-yellow stepper-btn"
-                aria-label="Increase respin replicas"
-              >
-                +
-              </NumberFieldIncrement>
-            </div>
-          </div>
-        </NumberFieldRoot>
+        />
       </div>
     </div>
 
@@ -179,15 +174,14 @@ function onToggleRespin(checked: boolean): void {
       <button
         type="button"
         class="brutalist-btn btn-yellow"
-        :disabled="isSpinning || !canShuffle"
-        @click="emit('shuffle')"
+        :class="{ 'is-locked': isSpinning || !canShuffle }"
+        @click="onShuffle"
       >
         SHUFFLE
       </button>
       <button
         type="button"
         class="brutalist-btn btn-yellow"
-        :disabled="isSpinning"
         @click="emit('open-presets')"
       >
         PRESETS
@@ -195,7 +189,6 @@ function onToggleRespin(checked: boolean): void {
       <button
         type="button"
         class="brutalist-btn btn-yellow"
-        :disabled="isSpinning"
         @click="emit('open-settings')"
       >
         SETTINGS
@@ -209,6 +202,7 @@ function onToggleRespin(checked: boolean): void {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  min-width: 0;
 }
 
 .column-header {
@@ -228,35 +222,16 @@ function onToggleRespin(checked: boolean): void {
   gap: 1.25rem;
 }
 
-.number-field-row {
+.respin-config {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.number-field-input {
-  flex: 1;
-}
-
-.number-field-steppers {
-  display: inline-flex;
-  gap: 0.35rem;
-  flex-shrink: 0;
-}
-
-.stepper-btn {
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  font-size: 1rem;
-  line-height: 1;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .toggle-container {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1rem;
 }
 
 .toggle-label {
@@ -265,6 +240,10 @@ function onToggleRespin(checked: boolean): void {
   text-transform: uppercase;
   font-weight: 700;
   cursor: pointer;
+}
+
+.toggle-label.is-locked {
+  cursor: not-allowed;
 }
 
 .brutalist-switch {
@@ -281,13 +260,12 @@ function onToggleRespin(checked: boolean): void {
   flex-shrink: 0;
 }
 
-.brutalist-switch[data-state='checked'] {
-  background-color: var(--accent-yellow);
+.brutalist-switch.is-locked {
+  cursor: not-allowed;
 }
 
-.brutalist-switch[data-disabled] {
-  opacity: 0.5;
-  cursor: not-allowed;
+.brutalist-switch[data-state='checked'] {
+  background-color: var(--accent-yellow);
 }
 
 .brutalist-switch-thumb {

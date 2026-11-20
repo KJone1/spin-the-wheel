@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { Preset } from '~~/shared/types/wheel'
 
-defineProps<{
+const props = defineProps<{
   open: boolean
   presets: Preset[]
+  isSpinning: boolean
 }>()
 
 const emit = defineEmits<{
@@ -21,6 +22,9 @@ function describePreset(preset: Preset): string {
 }
 
 function selectPreset(preset: Preset): void {
+  if (props.isSpinning) {
+    return
+  }
   emit('apply', preset)
   emit('update:open', false)
 }
@@ -34,7 +38,19 @@ function selectPreset(preset: Preset): void {
         <div class="modal-header">
           <DialogTitle as="h2">PRESETS</DialogTitle>
           <DialogClose class="modal-close brutalist-btn btn-red" aria-label="Close presets">
-            X
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="square"
+              aria-hidden="true"
+            >
+              <line x1="3" y1="3" x2="13" y2="13" />
+              <line x1="13" y1="3" x2="3" y2="13" />
+            </svg>
           </DialogClose>
         </div>
 
@@ -43,25 +59,33 @@ function selectPreset(preset: Preset): void {
         </DialogDescription>
 
         <div class="modal-body">
-          <div class="presets-grid">
-            <div
-              v-for="preset in presets"
-              :key="preset.id"
-              class="brutalist-card border-black preset-item"
-            >
-              <div class="preset-info">
-                <h4 class="preset-title">{{ preset.title }}</h4>
-                <p class="preset-desc">{{ describePreset(preset) }}</p>
+          <ScrollAreaRoot type="auto" class="presets-scroll-root">
+            <ScrollAreaViewport class="presets-scroll-viewport">
+              <div class="presets-grid">
+                <div
+                  v-for="preset in presets"
+                  :key="preset.id"
+                  class="brutalist-card border-black preset-item"
+                >
+                  <div class="preset-info">
+                    <h4 class="preset-title">{{ preset.title }}</h4>
+                    <p class="preset-desc">{{ describePreset(preset) }}</p>
+                  </div>
+                  <button
+                    type="button"
+                    class="brutalist-btn btn-yellow btn-small"
+                    :class="{ 'is-locked': isSpinning }"
+                    @click="selectPreset(preset)"
+                  >
+                    APPLY
+                  </button>
+                </div>
               </div>
-              <button
-                type="button"
-                class="brutalist-btn btn-yellow btn-small"
-                @click="selectPreset(preset)"
-              >
-                APPLY
-              </button>
-            </div>
-          </div>
+            </ScrollAreaViewport>
+            <ScrollAreaScrollbar orientation="vertical" class="presets-scrollbar">
+              <ScrollAreaThumb class="presets-scroll-thumb" />
+            </ScrollAreaScrollbar>
+          </ScrollAreaRoot>
         </div>
       </DialogContent>
     </DialogPortal>
@@ -69,13 +93,37 @@ function selectPreset(preset: Preset): void {
 </template>
 
 <style scoped>
+.presets-scroll-root {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.presets-scroll-viewport {
+  width: 100%;
+  max-height: min(480px, 65vh);
+}
+
 .presets-grid {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-height: 480px;
-  overflow-y: auto;
-  padding: 4px;
+  padding: 4px 22px 8px 4px;
+}
+
+.presets-scrollbar {
+  display: flex;
+  user-select: none;
+  touch-action: none;
+  width: 14px;
+  background-color: var(--background);
+  border: var(--border);
+}
+
+.presets-scroll-thumb {
+  flex: 1;
+  background-color: var(--primary);
+  position: relative;
 }
 
 .preset-item {

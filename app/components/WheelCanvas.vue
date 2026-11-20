@@ -300,11 +300,14 @@ onBeforeUnmount(() => {
     <button
       type="button"
       class="brutalist-btn spin-btn"
-      :class="{ 'respin-flash': isAutoRespinning }"
-      :disabled="isSpinning || slices.length === 0"
+      :class="{
+        'is-spinning': isSpinning,
+        'respin-flash': isAutoRespinning,
+        'is-locked': isSpinning || slices.length === 0
+      }"
       @click="startSpin"
     >
-      {{ isAutoRespinning ? 'HERE WE GO AGAIN...' : 'SPIN!' }}
+      {{ isAutoRespinning ? 'HERE WE GO AGAIN...' : isSpinning ? 'SPINNING...' : 'SPIN!' }}
     </button>
   </div>
 </template>
@@ -365,20 +368,27 @@ onBeforeUnmount(() => {
 
 .spin-action-area {
   width: 100%;
+  container-type: inline-size;
 }
 
 .spin-btn {
   width: 100%;
-  font-size: 3rem;
+  height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: clamp(1.8rem, 12cqi, 3rem);
   line-height: 1;
-  padding: 0.75rem 1.25rem;
+  padding: 0 1rem;
   box-shadow: var(--shadow);
   background-color: var(--accent-yellow);
   letter-spacing: 1px;
 }
 
 @media (hover: hover) {
-  .spin-btn:hover:not(:disabled) {
+  .spin-btn:hover:not(:disabled):not(.is-locked) {
     background-color: var(--primary);
     color: var(--accent-yellow);
     box-shadow: var(--shadow-hover);
@@ -386,15 +396,25 @@ onBeforeUnmount(() => {
   }
 }
 
-.spin-btn:active:not(:disabled) {
+.spin-btn:active:not(:disabled):not(.is-locked) {
   background-color: var(--primary);
   color: var(--accent-yellow);
   transform: translate(6px, 6px);
   box-shadow: 0px 0px 0px 0px var(--primary);
 }
 
+.spin-btn.is-locked {
+  cursor: not-allowed;
+}
+
+.spin-btn.is-spinning {
+  font-size: clamp(1.1rem, 11.5cqi, 3rem);
+}
+
 .spin-btn.respin-flash,
-.spin-btn.respin-flash:disabled {
+.spin-btn.respin-flash:hover,
+.spin-btn.respin-flash:active {
+  font-size: clamp(0.85rem, 6.8cqi, 2.35rem);
   background-color: var(--accent-red);
   color: var(--white);
   border-color: var(--primary);

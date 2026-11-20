@@ -108,6 +108,10 @@ watch(
 )
 
 function addEntry(payload: { text: string; replicas: number }): void {
+  if (isSpinning.value) {
+    return
+  }
+
   if (isDefaultState.value) {
     entries.value = []
     isDefaultState.value = false
@@ -125,6 +129,9 @@ function addEntry(payload: { text: string; replicas: number }): void {
 }
 
 function updateEntryReplicas(id: string, replicas: number): void {
+  if (isSpinning.value) {
+    return
+  }
   const target = entries.value.find(entry => entry.id === id)
   if (!target) {
     return
@@ -134,24 +141,36 @@ function updateEntryReplicas(id: string, replicas: number): void {
 }
 
 function deleteEntry(id: string): void {
+  if (isSpinning.value) {
+    return
+  }
   entries.value = entries.value.filter(entry => entry.id !== id)
   isDefaultState.value = false
 }
 
 function toggleRespin(active: boolean): void {
+  if (isSpinning.value) {
+    return
+  }
   respin.active = active
 }
 
 function updateRespinReplicas(replicas: number): void {
+  if (isSpinning.value) {
+    return
+  }
   respin.replicas = replicas
 }
 
 function disableRespin(): void {
+  if (isSpinning.value) {
+    return
+  }
   respin.active = false
 }
 
 function shuffleSlices(): void {
-  if (slices.value.length <= 1) {
+  if (isSpinning.value || slices.value.length <= 1) {
     return
   }
 
@@ -169,6 +188,9 @@ function shuffleSlices(): void {
 }
 
 function applyPreset(preset: Preset): void {
+  if (isSpinning.value) {
+    return
+  }
   entries.value = mapPresetEntries(preset)
   respin.active = preset.respinActive
   respin.replicas = preset.respinReplicas
@@ -238,6 +260,7 @@ function handleWinner(slice: WheelSlice): void {
     <PresetsModal
       v-model:open="presetsOpen"
       :presets="presets"
+      :is-spinning="isSpinning"
       @apply="applyPreset"
     />
 
@@ -284,7 +307,7 @@ function handleWinner(slice: WheelSlice): void {
 
 .main-layout {
   display: grid;
-  grid-template-columns: 1.8fr 1.2fr;
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
   gap: 2rem;
   align-items: stretch;
 }
@@ -295,6 +318,7 @@ function handleWinner(slice: WheelSlice): void {
   gap: 2rem;
   justify-content: flex-start;
   align-items: center;
+  min-width: 0;
   border: var(--border);
   background-color: var(--white);
   padding: 2.5rem;
@@ -311,7 +335,7 @@ function handleWinner(slice: WheelSlice): void {
 
 @media (max-width: 900px) {
   .main-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .logo-text {

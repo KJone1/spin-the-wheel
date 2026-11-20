@@ -31,6 +31,10 @@ function onDurationUpdate(value: number): void {
 }
 
 async function onSubmit(): Promise<void> {
+  if (isSaving.value) {
+    return
+  }
+
   const val = draftDuration.value
   if (typeof val !== 'number' || !Number.isInteger(val) || val < 1 || val > 60) {
     errorMessage.value = 'ENTER A VALUE BETWEEN 1 AND 60.'
@@ -63,7 +67,19 @@ async function onSubmit(): Promise<void> {
         <div class="modal-header">
           <DialogTitle as="h2">SETTINGS</DialogTitle>
           <DialogClose class="modal-close brutalist-btn btn-red" aria-label="Close settings">
-            X
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="square"
+              aria-hidden="true"
+            >
+              <line x1="3" y1="3" x2="13" y2="13" />
+              <line x1="13" y1="3" x2="3" y2="13" />
+            </svg>
           </DialogClose>
         </div>
 
@@ -73,38 +89,20 @@ async function onSubmit(): Promise<void> {
 
         <div class="modal-body">
           <form class="settings-form" novalidate @submit.prevent="onSubmit">
-            <NumberFieldRoot
+            <BauhausCounter
               id="spin-duration"
-              class="input-group"
+              label="SPIN DURATION (SECONDS)"
               :model-value="draftDuration"
               :min="1"
               :max="60"
               :step="1"
-              :disabled="isSaving"
+              :readonly="isSaving"
+              :aria-invalid="Boolean(errorMessage)"
+              :aria-describedby="errorMessage ? 'spin-duration-error' : undefined"
+              decrement-label="Decrease spin duration"
+              increment-label="Increase spin duration"
               @update:model-value="onDurationUpdate"
             >
-              <label for="spin-duration">SPIN DURATION (SECONDS)</label>
-              <div class="duration-row">
-                <NumberFieldInput
-                  class="duration-input"
-                  :aria-invalid="Boolean(errorMessage)"
-                  :aria-describedby="errorMessage ? 'spin-duration-error' : undefined"
-                />
-                <div class="duration-steppers">
-                  <NumberFieldDecrement
-                    class="brutalist-btn btn-small btn-yellow stepper-btn"
-                    aria-label="Decrease spin duration"
-                  >
-                    -
-                  </NumberFieldDecrement>
-                  <NumberFieldIncrement
-                    class="brutalist-btn btn-small btn-yellow stepper-btn"
-                    aria-label="Increase spin duration"
-                  >
-                    +
-                  </NumberFieldIncrement>
-                </div>
-              </div>
               <div
                 v-if="errorMessage"
                 id="spin-duration-error"
@@ -113,9 +111,9 @@ async function onSubmit(): Promise<void> {
               >
                 {{ errorMessage }}
               </div>
-            </NumberFieldRoot>
+            </BauhausCounter>
 
-            <button type="submit" class="brutalist-btn btn-yellow save-btn" :disabled="isSaving">
+            <button type="submit" class="brutalist-btn btn-yellow save-btn">
               {{ isSaving ? 'SAVING...' : 'SAVE SETTINGS' }}
             </button>
           </form>
@@ -130,30 +128,6 @@ async function onSubmit(): Promise<void> {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-}
-
-.duration-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.duration-input {
-  flex: 1;
-}
-
-.duration-steppers {
-  display: inline-flex;
-  gap: 0.35rem;
-  flex-shrink: 0;
-}
-
-.stepper-btn {
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  font-size: 1rem;
-  line-height: 1;
 }
 
 .save-btn {
