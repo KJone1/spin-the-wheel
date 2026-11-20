@@ -78,7 +78,7 @@ function onEntryTextInput(): void {
       :class="{ 'is-locked': isSpinning }"
       @mousedown.prevent
     >
-      + ADD
+      ADD
     </button>
     <div
       v-if="textError"
