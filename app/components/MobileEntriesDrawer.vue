@@ -103,10 +103,10 @@ function onToggleRespin(checked: boolean): void {
           >
             <polyline points="3 11 8 5 13 11" />
           </svg>
-          <span>ENTRIES</span>
+          <span>CONTROLS</span>
         </span>
         <DrawerTrigger class="sheet-bar-cta" @click.stop>
-          + ADD / EDIT
+          OPEN
         </DrawerTrigger>
       </DrawerSwipeArea>
 
@@ -120,12 +120,12 @@ function onToggleRespin(checked: boolean): void {
                   <DrawerHandle class="drawer-handle" />
                   <div class="drawer-header-row">
                     <div class="drawer-title-group">
-                      <DrawerTitle as="h2" class="drawer-title">ENTRIES</DrawerTitle>
+                      <DrawerTitle as="h2" class="drawer-title">CONTROLS</DrawerTitle>
                       <span class="badge">{{ totalSlices }} SLICES</span>
                     </div>
                     <DrawerClose
                       class="modal-close brutalist-btn btn-red"
-                      aria-label="Close entries"
+                      aria-label="Close controls"
                     >
                       <svg
                         width="14"
@@ -278,6 +278,7 @@ function onToggleRespin(checked: boolean): void {
   text-transform: uppercase;
   letter-spacing: 0.3px;
   cursor: pointer;
+  outline: none;
 }
 
 .sheet-bar-cta:active {
