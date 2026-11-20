@@ -99,19 +99,23 @@ function selectPreset(preset: Preset): void {
   width: 100%;
 }
 
-.presets-scroll-viewport {
+.presets-scroll-root :deep(.presets-scroll-viewport) {
   width: 100%;
-  max-height: min(480px, 65vh);
+  max-height: min(720px, calc(100dvh - 11rem));
 }
 
 .presets-grid {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 4px 22px 8px 4px;
+  padding: 4px 4px 8px 4px;
 }
 
-.presets-scrollbar {
+.modal-body :deep(.presets-scroll-root:has(.presets-scrollbar[data-state='visible']) .presets-grid) {
+  padding-right: 22px;
+}
+
+.presets-scroll-root :deep(.presets-scrollbar) {
   display: flex;
   user-select: none;
   touch-action: none;
@@ -120,7 +124,7 @@ function selectPreset(preset: Preset): void {
   border: var(--border);
 }
 
-.presets-scroll-thumb {
+.presets-scroll-root :deep(.presets-scroll-thumb) {
   flex: 1;
   background-color: var(--primary);
   position: relative;
