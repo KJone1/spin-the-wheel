@@ -60,6 +60,7 @@ const isDefaultState = ref<boolean>(defaultPreset.isDefault)
 const isSpinning = ref<boolean>(false)
 const slices = ref<WheelSlice[]>([])
 
+const mobileDrawerOpen = ref(false)
 const presetsOpen = ref(false)
 const settingsOpen = ref(false)
 const winnerOpen = ref(false)
@@ -221,6 +222,7 @@ function applyPreset(preset: Preset): void {
   respin.replicas = preset.respinReplicas
   isDefaultState.value = preset.isDefault
   colorIndex.value = entries.value.length % sliceColors.length
+  mobileDrawerOpen.value = false
 
   playTickSound(1000, 0.1)
   setTimeout(() => playTickSound(1300, 0.15), 100)
@@ -230,6 +232,7 @@ function handleSettingsSaved(nextSettings: EditableSettings): void {
   spinDuration.value = nextSettings.spinDuration
   soundMuted.value = nextSettings.soundMuted
   mysteryMode.value = nextSettings.mysteryMode
+  mobileDrawerOpen.value = false
 }
 
 function handleWinner(slice: WheelSlice): void {
@@ -287,6 +290,7 @@ function handleWinner(slice: WheelSlice): void {
     </main>
 
     <MobileEntriesDrawer
+      v-model:open="mobileDrawerOpen"
       :entries="entries"
       :respin="respin"
       :slice-colors="sliceColors"

@@ -3,6 +3,7 @@ import { ChevronUp, X } from '@lucide/vue'
 import type { RespinConfig, WheelEntry } from '~~/shared/types/wheel'
 
 const props = defineProps<{
+  open: boolean
   entries: WheelEntry[]
   respin: RespinConfig
   sliceColors: string[]
@@ -12,6 +13,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
+  'update:open': [value: boolean]
   'add-entry': [payload: { text: string; replicas: number }]
   'update-replicas': [id: string, replicas: number]
   'update-color': [id: string, color: string]
@@ -24,14 +26,13 @@ const emit = defineEmits<{
   'open-settings': []
 }>()
 
-const isOpen = ref(false)
 const addFormRef = ref<{ clearError: () => void } | null>(null)
 
 let desktopMediaQuery: MediaQueryList | null = null
 
 function onDesktopMediaChange(event: MediaQueryListEvent): void {
   if (event.matches) {
-    isOpen.value = false
+    emit('update:open', false)
   }
 }
 
@@ -44,15 +45,18 @@ onBeforeUnmount(() => {
   desktopMediaQuery?.removeEventListener('change', onDesktopMediaChange)
 })
 
-watch(isOpen, open => {
-  if (!open) {
-    addFormRef.value?.clearError()
+watch(
+  () => props.open,
+  open => {
+    if (!open) {
+      addFormRef.value?.clearError()
+    }
   }
-})
+)
 
 function openDrawer(): void {
-  if (!isOpen.value) {
-    isOpen.value = true
+  if (!props.open) {
+    emit('update:open', true)
   }
 }
 
@@ -72,21 +76,11 @@ function onShuffle(): void {
   }
   emit('shuffle')
 }
-
-function onOpenPresets(): void {
-  isOpen.value = false
-  emit('open-presets')
-}
-
-function onOpenSettings(): void {
-  isOpen.value = false
-  emit('open-settings')
-}
 </script>
 
 <template>
   <div class="mobile-drawer-dock">
-    <DrawerRoot v-model:open="isOpen" swipe-direction="down">
+    <DrawerRoot :open="open" swipe-direction="down" @update:open="emit('update:open', $event)">
       <DrawerSwipeArea class="mobile-sheet-bar" @click="openDrawer">
         <span class="sheet-bar-label">
           <ChevronUp :size="18" :stroke-width="3" aria-hidden="true" />
@@ -182,14 +176,14 @@ function onOpenSettings(): void {
                     <button
                       type="button"
                       class="brutalist-btn btn-yellow mobile-util-btn"
-                      @click="onOpenPresets"
+                      @click="emit('open-presets')"
                     >
                       PRESETS
                     </button>
                     <button
                       type="button"
                       class="brutalist-btn btn-yellow mobile-util-btn"
-                      @click="onOpenSettings"
+                      @click="emit('open-settings')"
                     >
                       SETTINGS
                     </button>
