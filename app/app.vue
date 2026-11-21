@@ -13,8 +13,8 @@ const { data: bootstrap, error } = await useFetch<BootstrapPayload>('/api/bootst
 
 if (error.value || !bootstrap.value) {
   throw createError({
-    statusCode: 500,
-    statusMessage: error.value?.statusMessage || 'Failed to load wheel configuration from D1'
+    status: 500,
+    statusText: error.value?.statusText || 'Failed to load wheel configuration from D1'
   })
 }
 
