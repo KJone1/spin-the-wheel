@@ -154,6 +154,7 @@ function onShuffle(): void {
                           id="mobile-respin-toggle"
                           class="brutalist-switch"
                           :class="{ 'is-locked': isSpinning }"
+                          :disabled="isSpinning"
                           :model-value="props.respin.active"
                           @update:model-value="onToggleRespin"
                         >
