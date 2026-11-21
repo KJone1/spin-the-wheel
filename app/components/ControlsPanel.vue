@@ -8,7 +8,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  'add-entry': [payload: { text: string; replicas: number }]
+  'add-entry': [text: string]
   'toggle-respin': [active: boolean]
   shuffle: []
   'open-presets': []

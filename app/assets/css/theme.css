@@ -4,8 +4,6 @@
   --accent-yellow: #ffcc00;
   --accent-red: #e63b2e;
   --accent-blue: #0055ff;
-  --accent-green: #00a86b;
-  --accent-orange: #ff5500;
   --background: #f5f0e8;
   --white: #ffffff;
 
@@ -103,13 +101,13 @@ body {
 }
 
 @media (hover: hover) {
-  .brutalist-btn:hover:not(:disabled):not(.is-locked) {
+  .brutalist-btn:hover:not(.is-locked) {
     transform: translate(-2px, -2px);
     box-shadow: 6px 6px 0px 0px var(--primary);
   }
 }
 
-.brutalist-btn:active:not(:disabled):not(.is-locked) {
+.brutalist-btn:active:not(.is-locked) {
   transform: translate(4px, 4px);
   box-shadow: 0px 0px 0px 0px var(--primary);
   transition: none;
@@ -119,27 +117,18 @@ body {
   cursor: not-allowed;
 }
 
-.brutalist-btn:disabled {
-  background-color: #ccc;
-  color: #888;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-  border-color: #888;
-}
-
 .btn-yellow {
   background-color: var(--accent-yellow);
 }
 
 @media (hover: hover) {
-  .btn-yellow:hover:not(:disabled):not(.is-locked) {
+  .btn-yellow:hover:not(.is-locked) {
     background-color: var(--primary);
     color: var(--accent-yellow);
   }
 }
 
-.btn-yellow:active:not(:disabled):not(.is-locked) {
+.btn-yellow:active:not(.is-locked) {
   background-color: var(--primary);
   color: var(--accent-yellow);
 }
@@ -150,32 +139,15 @@ body {
 }
 
 @media (hover: hover) {
-  .btn-red:hover:not(:disabled):not(.is-locked) {
+  .btn-red:hover:not(.is-locked) {
     background-color: var(--primary);
     color: var(--accent-red);
   }
 }
 
-.btn-red:active:not(:disabled):not(.is-locked) {
+.btn-red:active:not(.is-locked) {
   background-color: var(--primary);
   color: var(--accent-red);
-}
-
-.btn-blue {
-  background-color: var(--accent-blue);
-  color: var(--white);
-}
-
-@media (hover: hover) {
-  .btn-blue:hover:not(:disabled):not(.is-locked) {
-    background-color: var(--primary);
-    color: var(--accent-blue);
-  }
-}
-
-.btn-blue:active:not(:disabled):not(.is-locked) {
-  background-color: var(--primary);
-  color: var(--accent-blue);
 }
 
 .btn-small {
@@ -185,13 +157,13 @@ body {
 }
 
 @media (hover: hover) {
-  .btn-small:hover:not(:disabled):not(.is-locked) {
+  .btn-small:hover:not(.is-locked) {
     transform: translate(-1px, -1px);
     box-shadow: 3px 3px 0px 0px var(--primary);
   }
 }
 
-.btn-small:active:not(:disabled):not(.is-locked) {
+.btn-small:active:not(.is-locked) {
   transform: translate(2px, 2px);
   box-shadow: 0px 0px 0px 0px var(--primary);
 }
@@ -218,33 +190,6 @@ body {
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-}
-
-.input-group input {
-  background-color: transparent;
-  border: none;
-  border-bottom: var(--border);
-  padding: 0.5rem 0;
-  font-family: var(--font-body);
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--primary);
-  outline: none;
-  transition: border-color 0.2s;
-  width: 100%;
-}
-
-.input-group input:focus {
-  border-bottom-color: var(--accent-blue);
-}
-
-.input-group input[aria-invalid='true'] {
-  border-bottom-color: var(--accent-red);
-}
-
-.input-group.disabled {
-  opacity: 0.4;
-  pointer-events: none;
 }
 
 .custom-validation-bubble {
@@ -450,10 +395,6 @@ body {
   body {
     padding: 0.65rem 0.65rem max(0.65rem, env(safe-area-inset-bottom));
     min-height: 100dvh;
-  }
-
-  .modal-content {
-    width: calc(100% - 2rem);
   }
 }
 

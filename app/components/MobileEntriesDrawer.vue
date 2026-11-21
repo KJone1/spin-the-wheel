@@ -14,7 +14,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   'update:open': [value: boolean]
-  'add-entry': [payload: { text: string; replicas: number }]
+  'add-entry': [text: string]
   'update-replicas': [id: string, replicas: number]
   'update-color': [id: string, color: string]
   'delete-entry': [id: string]

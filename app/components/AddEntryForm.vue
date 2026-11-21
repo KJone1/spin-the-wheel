@@ -11,7 +11,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  'add-entry': [payload: { text: string; replicas: number }]
+  'add-entry': [text: string]
 }>()
 
 const entryText = ref('')
@@ -36,7 +36,7 @@ function onSubmitEntry(): void {
     return
   }
 
-  emit('add-entry', { text: trimmed, replicas: 1 })
+  emit('add-entry', trimmed)
   entryText.value = ''
   textError.value = false
   if (!props.embedded) {
@@ -149,13 +149,13 @@ function onEntryTextInput(): void {
 }
 
 @media (hover: hover) {
-  .add-entry-btn:hover:not(:disabled):not(.is-locked) {
+  .add-entry-btn:hover:not(.is-locked) {
     transform: translate(-1px, -1px);
     box-shadow: 4px 4px 0px 0px var(--primary);
   }
 }
 
-.add-entry-btn:active:not(:disabled):not(.is-locked) {
+.add-entry-btn:active:not(.is-locked) {
   transform: translate(3px, 3px);
   box-shadow: 0px 0px 0px 0px var(--primary);
 }

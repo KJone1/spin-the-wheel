@@ -180,7 +180,6 @@ const emit = defineEmits<{
   width: 0;
   min-width: 0;
   border: none;
-  border-bottom: none;
   border-radius: 0;
   padding: 0 0.25rem;
   text-align: center;

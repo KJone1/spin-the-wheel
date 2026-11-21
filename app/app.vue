@@ -121,7 +121,7 @@ watch(
   { deep: true, immediate: true }
 )
 
-function addEntry(payload: { text: string; replicas: number }): void {
+function addEntry(text: string): void {
   if (isSpinning.value) {
     return
   }
@@ -136,8 +136,8 @@ function addEntry(payload: { text: string; replicas: number }): void {
 
   entries.value.push({
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-    text: payload.text,
-    replicas: payload.replicas,
+    text,
+    replicas: 1,
     color
   })
 }

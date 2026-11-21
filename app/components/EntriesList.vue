@@ -332,21 +332,6 @@ function formatRespinLabel(text: string): string {
 }
 
 @media (max-width: 900px) {
-  .entries-card:not(.is-embedded) {
-    flex: none;
-    min-height: auto;
-    padding: 1rem;
-  }
-
-  .entries-card:not(.is-embedded) .entries-scroll-root {
-    flex: none;
-  }
-
-  .entries-card:not(.is-embedded) .entries-scroll-root :deep(.entries-scroll-viewport) {
-    height: auto;
-    max-height: 250px;
-  }
-
   .entry-item {
     padding: 0.35rem 0.75rem;
     gap: 0.5rem;

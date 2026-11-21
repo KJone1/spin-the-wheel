@@ -490,7 +490,7 @@ onBeforeUnmount(() => {
 }
 
 @media (hover: hover) {
-  .spin-btn:hover:not(:disabled):not(.is-locked) {
+  .spin-btn:hover:not(.is-locked) {
     background-color: var(--primary);
     color: var(--accent-yellow);
     box-shadow: var(--shadow-hover);
@@ -498,7 +498,7 @@ onBeforeUnmount(() => {
   }
 }
 
-.spin-btn:active:not(:disabled):not(.is-locked) {
+.spin-btn:active:not(.is-locked) {
   background-color: var(--primary);
   color: var(--accent-yellow);
   transform: translate(6px, 6px);
