@@ -4,6 +4,7 @@ import type { RespinConfig, WheelEntry } from '~~/shared/types/wheel'
 const props = defineProps<{
   entries: WheelEntry[]
   respin: RespinConfig
+  sliceColors: string[]
   totalSlices: number
   isSpinning: boolean
   canShuffle: boolean
@@ -12,6 +13,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   'add-entry': [payload: { text: string; replicas: number }]
   'update-replicas': [id: string, replicas: number]
+  'update-color': [id: string, color: string]
   'delete-entry': [id: string]
   'toggle-respin': [active: boolean]
   'update-respin-replicas': [replicas: number]
@@ -156,10 +158,12 @@ function onOpenSettings(): void {
                   <EntriesList
                     :entries="entries"
                     :respin="respin"
+                    :slice-colors="sliceColors"
                     :total-slices="totalSlices"
                     :disabled="isSpinning"
                     embedded
                     @update-replicas="(id, replicas) => emit('update-replicas', id, replicas)"
+                    @update-color="(id, color) => emit('update-color', id, color)"
                     @delete-entry="id => emit('delete-entry', id)"
                     @update-respin-replicas="replicas => emit('update-respin-replicas', replicas)"
                     @disable-respin="emit('disable-respin')"

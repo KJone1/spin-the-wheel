@@ -5,6 +5,7 @@ const props = withDefaults(
   defineProps<{
     entries: WheelEntry[]
     respin: RespinConfig
+    sliceColors: string[]
     totalSlices: number
     disabled: boolean
     embedded?: boolean
@@ -16,10 +17,18 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   'update-replicas': [id: string, replicas: number]
+  'update-color': [id: string, color: string]
   'delete-entry': [id: string]
   'update-respin-replicas': [replicas: number]
   'disable-respin': []
 }>()
+
+function onEntryColorUpdate(id: string, color: string): void {
+  if (props.disabled) {
+    return
+  }
+  emit('update-color', id, color)
+}
 
 function onEntryReplicasUpdate(id: string, value: number): void {
   if (props.disabled) {
@@ -77,7 +86,14 @@ function formatRespinLabel(text: string): string {
         <ul class="entries-list">
         <li v-for="entry in entries" :key="entry.id" class="entry-item">
           <div class="entry-item-info">
-            <span class="entry-color-indicator" :style="{ backgroundColor: entry.color }" />
+            <EntryColorPicker
+              :model-value="entry.color"
+              :colors="sliceColors"
+              :entry-label="entry.text"
+              :disabled="disabled"
+              :mode="embedded ? 'modal' : 'popover'"
+              @update:model-value="onEntryColorUpdate(entry.id, $event)"
+            />
             <span class="entry-label" :title="entry.text">{{ entry.text.toUpperCase() }}</span>
           </div>
 
@@ -126,8 +142,8 @@ function formatRespinLabel(text: string): string {
               :style="{ backgroundColor: respin.color }"
             >
               <svg
-                width="10"
-                height="10"
+                width="18"
+                height="18"
                 viewBox="0 0 16 16"
                 fill="none"
                 stroke="currentColor"
@@ -311,12 +327,11 @@ function formatRespinLabel(text: string): string {
   gap: 0.75rem;
   flex-grow: 1;
   min-width: 0;
-  overflow: hidden;
 }
 
 .entry-color-indicator {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   border: 2px solid var(--primary);
   flex-shrink: 0;
 }

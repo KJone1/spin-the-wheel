@@ -140,6 +140,18 @@ function updateEntryReplicas(id: string, replicas: number): void {
   isDefaultState.value = false
 }
 
+function updateEntryColor(id: string, color: string): void {
+  if (isSpinning.value) {
+    return
+  }
+  const target = entries.value.find(entry => entry.id === id)
+  if (!target) {
+    return
+  }
+  target.color = color
+  isDefaultState.value = false
+}
+
 function deleteEntry(id: string): void {
   if (isSpinning.value) {
     return
@@ -246,9 +258,11 @@ function handleWinner(slice: WheelSlice): void {
         <EntriesList
           :entries="entries"
           :respin="respin"
+          :slice-colors="sliceColors"
           :total-slices="slices.length"
           :disabled="isSpinning"
           @update-replicas="updateEntryReplicas"
+          @update-color="updateEntryColor"
           @delete-entry="deleteEntry"
           @update-respin-replicas="updateRespinReplicas"
           @disable-respin="disableRespin"
@@ -259,11 +273,13 @@ function handleWinner(slice: WheelSlice): void {
     <MobileEntriesDrawer
       :entries="entries"
       :respin="respin"
+      :slice-colors="sliceColors"
       :total-slices="slices.length"
       :is-spinning="isSpinning"
       :can-shuffle="slices.length > 1"
       @add-entry="addEntry"
       @update-replicas="updateEntryReplicas"
+      @update-color="updateEntryColor"
       @delete-entry="deleteEntry"
       @toggle-respin="toggleRespin"
       @update-respin-replicas="updateRespinReplicas"
