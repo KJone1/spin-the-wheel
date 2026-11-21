@@ -4,6 +4,8 @@ import type { Preset } from '~~/shared/types/wheel'
 const props = defineProps<{
   open: boolean
   presets: Preset[]
+  respinColor: string
+  respinLabel: string
   isSpinning: boolean
 }>()
 
@@ -12,13 +14,33 @@ const emit = defineEmits<{
   apply: [preset: Preset]
 }>()
 
-function describePreset(preset: Preset): string {
-  const parts = preset.entries.map(entry => `${entry.replicas} x ${entry.label.toUpperCase()}`)
-  if (preset.respinActive) {
-    parts.push(`${preset.respinReplicas} x RESPIN`)
-    return parts.join(', ')
+function formatRespinLabel(text: string): string {
+  return text.replace(/↻/g, '').trim().toUpperCase()
+}
+
+function getChipTextColor(hex: string): string {
+  const cleaned = hex.trim().replace('#', '')
+  const normalized =
+    cleaned.length === 3
+      ? cleaned
+          .split('')
+          .map(ch => ch + ch)
+          .join('')
+      : cleaned
+
+  if (normalized.length !== 6) {
+    return '#1a1a1a'
   }
-  return `${parts.join(', ')} (NO RESPIN)`
+
+  const r = parseInt(normalized.slice(0, 2), 16) / 255
+  const g = parseInt(normalized.slice(2, 4), 16) / 255
+  const b = parseInt(normalized.slice(4, 6), 16) / 255
+
+  const toLinear = (channel: number): number =>
+    channel <= 0.03928 ? channel / 12.92 : Math.pow((channel + 0.055) / 1.055, 2.4)
+
+  const luminance = 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b)
+  return luminance <= 0.22 ? '#f5f0e8' : '#1a1a1a'
 }
 
 function selectPreset(preset: Preset): void {
@@ -69,7 +91,46 @@ function selectPreset(preset: Preset): void {
                 >
                   <div class="preset-info">
                     <h4 class="preset-title">{{ preset.title }}</h4>
-                    <p class="preset-desc">{{ describePreset(preset) }}</p>
+                    <ul class="preset-entries">
+                      <li
+                        v-for="entry in preset.entries"
+                        :key="entry.id"
+                        class="preset-chip"
+                        :style="{
+                          backgroundColor: entry.color,
+                          color: getChipTextColor(entry.color)
+                        }"
+                      >
+                        <span class="preset-chip-count">{{ entry.replicas }}X</span>
+                        <span class="preset-chip-label">{{ entry.label.toUpperCase() }}</span>
+                      </li>
+                      <li
+                        v-if="preset.respinActive"
+                        class="preset-chip"
+                        :style="{
+                          backgroundColor: respinColor,
+                          color: getChipTextColor(respinColor)
+                        }"
+                      >
+                        <span class="preset-chip-count">{{ preset.respinReplicas }}X</span>
+                        <svg
+                          class="preset-chip-icon"
+                          width="12"
+                          height="12"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                          stroke-linecap="square"
+                          stroke-linejoin="miter"
+                          aria-hidden="true"
+                        >
+                          <path d="M13 8a5 5 0 1 1-1.5-3.5" />
+                          <polyline points="12.5 1.8 12.5 5.2 9.1 5.2" />
+                        </svg>
+                        <span class="preset-chip-label">{{ formatRespinLabel(respinLabel) }}</span>
+                      </li>
+                    </ul>
                   </div>
                   <button
                     type="button"
@@ -138,10 +199,16 @@ function selectPreset(preset: Preset): void {
   box-shadow: 4px 4px 0px 0px var(--primary);
 }
 
+.preset-item > button {
+  flex-shrink: 0;
+}
+
 .preset-info {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.6rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .preset-title {
@@ -150,9 +217,53 @@ function selectPreset(preset: Preset): void {
   text-transform: uppercase;
 }
 
-.preset-desc {
-  font-size: 0.85rem;
-  color: #666;
+.preset-entries {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.preset-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.22rem 0.5rem 0.22rem 0.25rem;
+  border: 2px solid var(--primary);
+  box-shadow: 2px 2px 0px 0px var(--primary);
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  max-width: 100%;
+}
+
+.preset-chip-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.14rem 0.34rem;
+  background-color: var(--white);
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.preset-chip-icon {
+  display: block;
+  flex-shrink: 0;
+}
+
+.preset-chip-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media (max-width: 900px) {

@@ -276,6 +276,8 @@ function handleWinner(slice: WheelSlice): void {
     <PresetsModal
       v-model:open="presetsOpen"
       :presets="presets"
+      :respin-color="respin.color"
+      :respin-label="respin.text"
       :is-spinning="isSpinning"
       @apply="applyPreset"
     />
