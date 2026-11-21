@@ -61,6 +61,8 @@ export default defineEventHandler(async (event): Promise<BootstrapPayload> => {
 
   const settings: AppSettings = {
     spinDuration: readRequiredSetting<number>(settingMap, 'spin_duration'),
+    soundMuted: readRequiredSetting<boolean>(settingMap, 'sound_muted'),
+    mysteryMode: readRequiredSetting<boolean>(settingMap, 'mystery_mode'),
     respinLabel: readRequiredSetting<string>(settingMap, 'respin_label'),
     respinColor: readRequiredSetting<string>(settingMap, 'respin_color'),
     autoRespinDelayMs: readRequiredSetting<number>(settingMap, 'auto_respin_delay_ms'),

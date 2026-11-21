@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type {
   BootstrapPayload,
+  EditableSettings,
   Preset,
   RespinConfig,
   WheelEntry,
   WheelSlice
 } from '~~/shared/types/wheel'
-import { playTickSound } from '~/utils/sound'
+import { playTickSound, setSoundMuted } from '~/utils/sound'
 
 const { data: bootstrap, error } = await useFetch<BootstrapPayload>('/api/bootstrap')
 
@@ -40,7 +41,19 @@ const respin = reactive<RespinConfig>({
 })
 
 const spinDuration = ref<number>(initialSettings.spinDuration)
+const soundMuted = ref<boolean>(initialSettings.soundMuted)
+const mysteryMode = ref<boolean>(initialSettings.mysteryMode)
 const autoRespinDelayMs = initialSettings.autoRespinDelayMs
+
+watch(
+  soundMuted,
+  muted => {
+    if (import.meta.client) {
+      setSoundMuted(muted)
+    }
+  },
+  { immediate: true }
+)
 const sliceColors = initialSettings.sliceColors
 const colorIndex = ref<number>(entries.value.length % sliceColors.length)
 const isDefaultState = ref<boolean>(defaultPreset.isDefault)
@@ -213,8 +226,10 @@ function applyPreset(preset: Preset): void {
   setTimeout(() => playTickSound(1300, 0.15), 100)
 }
 
-function handleSettingsSaved(nextDuration: number): void {
-  spinDuration.value = nextDuration
+function handleSettingsSaved(nextSettings: EditableSettings): void {
+  spinDuration.value = nextSettings.spinDuration
+  soundMuted.value = nextSettings.soundMuted
+  mysteryMode.value = nextSettings.mysteryMode
 }
 
 function handleWinner(slice: WheelSlice): void {
@@ -236,6 +251,7 @@ function handleWinner(slice: WheelSlice): void {
             :slices="slices"
             :spin-duration="spinDuration"
             :auto-respin-delay-ms="autoRespinDelayMs"
+            :mystery-mode="mysteryMode"
             @update:spinning="isSpinning = $event"
             @winner="handleWinner"
           />
@@ -301,6 +317,8 @@ function handleWinner(slice: WheelSlice): void {
     <SettingsModal
       v-model:open="settingsOpen"
       :spin-duration="spinDuration"
+      :sound-muted="soundMuted"
+      :mystery-mode="mysteryMode"
       @saved="handleSettingsSaved"
     />
 

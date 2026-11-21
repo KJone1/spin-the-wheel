@@ -1,17 +1,28 @@
 <script setup lang="ts">
 import { X } from '@lucide/vue'
+import type { EditableSettings } from '~~/shared/types/wheel'
 
 const props = defineProps<{
   open: boolean
   spinDuration: number
+  soundMuted: boolean
+  mysteryMode: boolean
 }>()
 
 const emit = defineEmits<{
   'update:open': [value: boolean]
-  saved: [spinDuration: number]
+  saved: [settings: EditableSettings]
 }>()
 
+const durationFormatOptions: Intl.NumberFormatOptions = {
+  style: 'unit',
+  unit: 'second',
+  unitDisplay: 'narrow'
+}
+
 const draftDuration = ref<number>(props.spinDuration)
+const draftSoundMuted = ref<boolean>(props.soundMuted)
+const draftMysteryMode = ref<boolean>(props.mysteryMode)
 const errorMessage = ref<string | null>(null)
 const isSaving = ref(false)
 
@@ -20,6 +31,8 @@ watch(
   isOpen => {
     if (isOpen) {
       draftDuration.value = props.spinDuration
+      draftSoundMuted.value = props.soundMuted
+      draftMysteryMode.value = props.mysteryMode
       errorMessage.value = null
     }
   }
@@ -30,6 +43,22 @@ function onDurationUpdate(value: number): void {
   if (typeof value === 'number' && !Number.isNaN(value)) {
     draftDuration.value = value
   }
+}
+
+function onSoundMutedUpdate(checked: boolean): void {
+  if (isSaving.value) {
+    return
+  }
+  errorMessage.value = null
+  draftSoundMuted.value = checked
+}
+
+function onMysteryModeUpdate(checked: boolean): void {
+  if (isSaving.value) {
+    return
+  }
+  errorMessage.value = null
+  draftMysteryMode.value = checked
 }
 
 async function onSubmit(): Promise<void> {
@@ -47,11 +76,15 @@ async function onSubmit(): Promise<void> {
   errorMessage.value = null
 
   try {
-    const response = await $fetch<{ spinDuration: number }>('/api/settings', {
+    const response = await $fetch<EditableSettings>('/api/settings', {
       method: 'PATCH',
-      body: { spinDuration: val }
+      body: {
+        spinDuration: val,
+        soundMuted: draftSoundMuted.value,
+        mysteryMode: draftMysteryMode.value
+      }
     })
-    emit('saved', response.spinDuration)
+    emit('saved', response)
     emit('update:open', false)
   } catch {
     errorMessage.value = 'FAILED TO SAVE SETTINGS.'
@@ -74,18 +107,20 @@ async function onSubmit(): Promise<void> {
         </div>
 
         <DialogDescription class="sr-only">
-          Update and save the wheel spin duration in seconds.
+          Update and save wheel settings.
         </DialogDescription>
 
         <div class="modal-body">
           <form class="settings-form" novalidate @submit.prevent="onSubmit">
             <BauhausCounter
               id="spin-duration"
-              label="SPIN DURATION (SECONDS)"
+              label="SPIN DURATION"
               :model-value="draftDuration"
               :min="1"
               :max="60"
               :step="1"
+              :format-options="durationFormatOptions"
+              locale="en-US"
               :readonly="isSaving"
               :aria-invalid="Boolean(errorMessage)"
               :aria-describedby="errorMessage ? 'spin-duration-error' : undefined"
@@ -102,6 +137,46 @@ async function onSubmit(): Promise<void> {
                 {{ errorMessage }}
               </div>
             </BauhausCounter>
+
+            <div class="setting-toggle-row">
+              <label
+                for="mute-sound-toggle"
+                class="setting-toggle-label"
+                :class="{ 'is-locked': isSaving }"
+              >
+                MUTE SOUNDS
+              </label>
+              <SwitchRoot
+                id="mute-sound-toggle"
+                class="brutalist-switch"
+                :class="{ 'is-locked': isSaving }"
+                :disabled="isSaving"
+                :model-value="draftSoundMuted"
+                @update:model-value="onSoundMutedUpdate"
+              >
+                <SwitchThumb class="brutalist-switch-thumb" />
+              </SwitchRoot>
+            </div>
+
+            <div class="setting-toggle-row">
+              <label
+                for="mystery-mode-toggle"
+                class="setting-toggle-label"
+                :class="{ 'is-locked': isSaving }"
+              >
+                MYSTERY MODE
+              </label>
+              <SwitchRoot
+                id="mystery-mode-toggle"
+                class="brutalist-switch"
+                :class="{ 'is-locked': isSaving }"
+                :disabled="isSaving"
+                :model-value="draftMysteryMode"
+                @update:model-value="onMysteryModeUpdate"
+              >
+                <SwitchThumb class="brutalist-switch-thumb" />
+              </SwitchRoot>
+            </div>
 
             <button type="submit" class="brutalist-btn btn-yellow save-btn">
               {{ isSaving ? 'SAVING...' : 'SAVE SETTINGS' }}
@@ -120,7 +195,64 @@ async function onSubmit(): Promise<void> {
   gap: 1.25rem;
 }
 
+.setting-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: var(--border);
+}
+
+.setting-toggle-label {
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.setting-toggle-label.is-locked {
+  cursor: not-allowed;
+}
+
+.brutalist-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 60px;
+  height: 30px;
+  background-color: var(--white);
+  border: var(--border);
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.brutalist-switch.is-locked {
+  cursor: not-allowed;
+}
+
+.brutalist-switch[data-state='checked'] {
+  background-color: var(--accent-yellow);
+}
+
+.brutalist-switch-thumb {
+  display: block;
+  height: 20px;
+  width: 20px;
+  background-color: var(--primary);
+  transform: translateX(3px);
+  transition: transform 0.2s;
+}
+
+.brutalist-switch-thumb[data-state='checked'] {
+  transform: translateX(31px);
+}
+
 .save-btn {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 </style>

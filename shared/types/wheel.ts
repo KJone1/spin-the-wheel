@@ -35,8 +35,13 @@ export interface Preset {
   entries: PresetEntry[]
 }
 
-export interface AppSettings {
+export interface EditableSettings {
   spinDuration: number
+  soundMuted: boolean
+  mysteryMode: boolean
+}
+
+export interface AppSettings extends EditableSettings {
   respinLabel: string
   respinColor: string
   autoRespinDelayMs: number

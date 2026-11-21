@@ -3,9 +3,14 @@ type WindowWithWebkitAudio = Window & {
 }
 
 let audioCtx: AudioContext | null = null
+let soundMuted = false
+
+export function setSoundMuted(muted: boolean): void {
+  soundMuted = muted
+}
 
 export function ensureAudioContext(): AudioContext | null {
-  if (typeof window === 'undefined') {
+  if (typeof window === 'undefined' || soundMuted) {
     return null
   }
 
@@ -26,6 +31,10 @@ export function ensureAudioContext(): AudioContext | null {
 }
 
 export function playTickSound(frequency = 1000, duration = 0.012): void {
+  if (soundMuted) {
+    return
+  }
+
   try {
     const ctx = ensureAudioContext()
     if (!ctx) {

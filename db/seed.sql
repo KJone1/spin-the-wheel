@@ -1,5 +1,7 @@
 INSERT OR REPLACE INTO app_settings (key, value) VALUES
   ('spin_duration', '10'),
+  ('sound_muted', 'false'),
+  ('mystery_mode', 'false'),
   ('respin_label', '"RESPIN ↻"'),
   ('respin_color', '"#e63b2e"'),
   ('auto_respin_delay_ms', '1200'),

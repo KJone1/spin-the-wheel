@@ -1,10 +1,16 @@
+import type { EditableSettings } from '~~/shared/types/wheel'
+
 interface UpdateSettingsBody {
   spinDuration?: unknown
+  soundMuted?: unknown
+  mysteryMode?: unknown
 }
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event): Promise<EditableSettings> => {
   const body = await readBody<UpdateSettingsBody>(event)
   const spinDuration = body?.spinDuration
+  const soundMuted = body?.soundMuted
+  const mysteryMode = body?.mysteryMode
 
   if (
     typeof spinDuration !== 'number' ||
@@ -18,18 +24,32 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const db = getD1Database(event)
+  if (typeof soundMuted !== 'boolean') {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'soundMuted must be a boolean'
+    })
+  }
 
-  await db
-    .prepare(
-      `INSERT INTO app_settings (key, value, updated_at)
-       VALUES ('spin_duration', ?, CURRENT_TIMESTAMP)
+  if (typeof mysteryMode !== 'boolean') {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'mysteryMode must be a boolean'
+    })
+  }
+
+  const db = getD1Database(event)
+  const upsertSql = `INSERT INTO app_settings (key, value, updated_at)
+       VALUES (?, ?, CURRENT_TIMESTAMP)
        ON CONFLICT(key) DO UPDATE SET
          value = excluded.value,
          updated_at = CURRENT_TIMESTAMP`
-    )
-    .bind(JSON.stringify(spinDuration))
-    .run()
 
-  return { spinDuration }
+  await db.batch([
+    db.prepare(upsertSql).bind('spin_duration', JSON.stringify(spinDuration)),
+    db.prepare(upsertSql).bind('sound_muted', JSON.stringify(soundMuted)),
+    db.prepare(upsertSql).bind('mystery_mode', JSON.stringify(mysteryMode))
+  ])
+
+  return { spinDuration, soundMuted, mysteryMode }
 })

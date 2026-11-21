@@ -10,6 +10,8 @@ withDefaults(
     min?: number
     max?: number
     step?: number
+    formatOptions?: Intl.NumberFormatOptions
+    locale?: string
     readonly?: boolean
     compact?: boolean
     ariaInvalid?: boolean
@@ -23,6 +25,8 @@ withDefaults(
     min: 1,
     max: 100,
     step: 1,
+    formatOptions: undefined,
+    locale: undefined,
     readonly: false,
     compact: false,
     ariaInvalid: false,
@@ -43,6 +47,8 @@ const emit = defineEmits<{
     :min="min"
     :max="max"
     :step="step"
+    :format-options="formatOptions"
+    :locale="locale"
     :readonly="readonly"
     :focus-on-change="false"
     @update:model-value="emit('update:modelValue', $event)"

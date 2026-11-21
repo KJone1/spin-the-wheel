@@ -6,6 +6,7 @@ const props = defineProps<{
   slices: WheelSlice[]
   spinDuration: number
   autoRespinDelayMs: number
+  mysteryMode: boolean
 }>()
 
 const emit = defineEmits<{
@@ -19,6 +20,9 @@ const tickerPinRef = ref<HTMLDivElement | null>(null)
 const isSpinning = ref(false)
 const isAutoRespinning = ref(false)
 const isHoveringCenter = ref(false)
+
+const QUESTION_MARK_CURVE_PATH = 'M12 15c0-2.48 5-2.99 5-6.5a5 4.5 0 00-10 0'
+let questionMarkCurve: Path2D | null = null
 
 let currentAngle = 0
 let lastTickSliceIndex = -1
@@ -60,6 +64,36 @@ function getSliceUnderPointer(): number {
   return Math.min(index, props.slices.length - 1)
 }
 
+function getQuestionMarkCurve(): Path2D {
+  if (!questionMarkCurve) {
+    questionMarkCurve = new Path2D(QUESTION_MARK_CURVE_PATH)
+  }
+  return questionMarkCurve
+}
+
+function drawQuestionMarkIcon(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  size: number
+): void {
+  const scale = size / 24
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.scale(scale, scale)
+  ctx.translate(-12, -12)
+  ctx.strokeStyle = '#1a1a1a'
+  ctx.lineWidth = 3
+  ctx.lineCap = 'round'
+  ctx.lineJoin = 'round'
+  ctx.stroke(getQuestionMarkCurve())
+  ctx.beginPath()
+  ctx.arc(12, 20, 1.5, 0, 2 * Math.PI)
+  ctx.fillStyle = '#1a1a1a'
+  ctx.fill()
+  ctx.restore()
+}
+
 function drawWheel(): void {
   const canvas = canvasRef.value
   if (!canvas) {
@@ -93,6 +127,7 @@ function drawWheel(): void {
   }
 
   const anglePerSlice = (2 * Math.PI) / props.slices.length
+  const hideSlices = props.mysteryMode && isSpinning.value
 
   props.slices.forEach((slice, index) => {
     const sliceStart = index * anglePerSlice + currentAngle
@@ -103,7 +138,7 @@ function drawWheel(): void {
     ctx.arc(center, center, radius, sliceStart, sliceEnd)
     ctx.closePath()
 
-    ctx.fillStyle = slice.color
+    ctx.fillStyle = hideSlices ? '#f5f0e8' : slice.color
     ctx.fill()
 
     ctx.lineWidth = 3
@@ -115,6 +150,15 @@ function drawWheel(): void {
     const sliceStart = index * anglePerSlice + currentAngle
     const sliceEnd = (index + 1) * anglePerSlice + currentAngle
     const midAngle = sliceStart + (sliceEnd - sliceStart) / 2
+
+    if (hideSlices) {
+      const iconRadius = radius * 0.66
+      const iconSize = Math.min(44, Math.max(16, 260 / props.slices.length))
+      const iconX = center + Math.cos(midAngle) * iconRadius
+      const iconY = center + Math.sin(midAngle) * iconRadius
+      drawQuestionMarkIcon(ctx, iconX, iconY, iconSize)
+      return
+    }
 
     ctx.save()
     ctx.translate(center, center)
@@ -180,6 +224,7 @@ function finishSpin(): void {
   if (!winner) {
     isSpinning.value = false
     emit('update:spinning', false)
+    drawWheel()
     return
   }
 
@@ -199,6 +244,7 @@ function finishSpin(): void {
 
   isSpinning.value = false
   emit('update:spinning', false)
+  drawWheel()
 
   playTickSound(880, 0.1)
   setTimeout(() => playTickSound(1100, 0.1), 100)
@@ -298,6 +344,13 @@ watch(
     drawWheel()
   },
   { deep: true }
+)
+
+watch(
+  () => props.mysteryMode,
+  () => {
+    drawWheel()
+  }
 )
 
 onMounted(() => {
