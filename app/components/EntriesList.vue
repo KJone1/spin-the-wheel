@@ -69,100 +69,95 @@ function formatRespinLabel(text: string): string {
 </script>
 
 <template>
-  <div
-    class="entries-card"
-    :class="embedded ? 'is-embedded' : 'brutalist-card border-black'"
-  >
+  <div class="entries-card" :class="embedded ? 'is-embedded' : 'brutalist-card border-black'">
     <div v-if="!embedded" class="card-header-row">
       <h3 class="card-title">ENTRIES</h3>
       <span class="badge">{{ totalSlices }} SLICES</span>
     </div>
 
-    <p v-if="entries.length === 0 && !respin.active" class="empty-entries-note">
-      NO ENTRIES YET
-    </p>
+    <p v-if="entries.length === 0 && !respin.active" class="empty-entries-note">NO ENTRIES YET</p>
 
     <ScrollAreaRoot v-else type="auto" class="entries-scroll-root">
       <ScrollAreaViewport class="entries-scroll-viewport">
         <ul class="entries-list">
-        <li v-for="entry in entries" :key="entry.id" class="entry-item">
-          <div class="entry-item-info">
-            <EntryColorPicker
-              :model-value="entry.color"
-              :colors="sliceColors"
-              :entry-label="entry.text"
-              :disabled="disabled"
-              :mobile="embedded"
-              @update:model-value="onEntryColorUpdate(entry.id, $event)"
-            />
-            <span class="entry-label" :title="entry.text">{{ entry.text.toUpperCase() }}</span>
-          </div>
+          <li v-for="entry in entries" :key="entry.id" class="entry-item">
+            <div class="entry-item-info">
+              <EntryColorPicker
+                :model-value="entry.color"
+                :colors="sliceColors"
+                :entry-label="entry.text"
+                :disabled="disabled"
+                :mobile="embedded"
+                @update:model-value="onEntryColorUpdate(entry.id, $event)"
+              />
+              <span class="entry-label" :title="entry.text">{{ entry.text.toUpperCase() }}</span>
+            </div>
 
-          <div class="entry-item-actions">
-            <BauhausCounter
-              :id="`${embedded ? 'mobile-' : ''}entry-replicas-${entry.id}`"
-              compact
-              :model-value="entry.replicas"
-              :min="1"
-              :max="100"
-              :step="1"
-              :readonly="disabled"
-              :aria-label="`${entry.text} replicas`"
-              :decrement-label="`Decrease ${entry.text} replicas`"
-              :increment-label="`Increase ${entry.text} replicas`"
-              @update:model-value="onEntryReplicasUpdate(entry.id, $event)"
-            />
+            <div class="entry-item-actions">
+              <BauhausCounter
+                :id="`${embedded ? 'mobile-' : ''}entry-replicas-${entry.id}`"
+                compact
+                :model-value="entry.replicas"
+                :min="1"
+                :max="100"
+                :step="1"
+                :readonly="disabled"
+                :aria-label="`${entry.text} replicas`"
+                :decrement-label="`Decrease ${entry.text} replicas`"
+                :increment-label="`Increase ${entry.text} replicas`"
+                @update:model-value="onEntryReplicasUpdate(entry.id, $event)"
+              />
 
-            <button
-              type="button"
-              class="brutalist-btn btn-small btn-red action-icon-btn"
-              :class="{ 'is-locked': disabled }"
-              :aria-label="`Delete ${entry.text}`"
-              @click="deleteEntry(entry.id)"
-            >
-              <X :size="18" :stroke-width="3" aria-hidden="true" />
-            </button>
-          </div>
-        </li>
+              <button
+                type="button"
+                class="brutalist-btn btn-small btn-red action-icon-btn"
+                :class="{ 'is-locked': disabled }"
+                :aria-label="`Delete ${entry.text}`"
+                @click="deleteEntry(entry.id)"
+              >
+                <X :size="18" :stroke-width="3" aria-hidden="true" />
+              </button>
+            </div>
+          </li>
 
-        <li v-if="respin.active" class="entry-item">
-          <div class="entry-item-info">
-            <span
-              class="entry-color-indicator respin-color-indicator"
-              :style="{ backgroundColor: respin.color }"
-            >
-              <RotateCw :size="16" :stroke-width="2.5" aria-hidden="true" />
-            </span>
-            <span class="entry-label respin-label">{{ formatRespinLabel(respin.text) }}</span>
-          </div>
+          <li v-if="respin.active" class="entry-item">
+            <div class="entry-item-info">
+              <span
+                class="entry-color-indicator respin-color-indicator"
+                :style="{ backgroundColor: respin.color }"
+              >
+                <RotateCw :size="16" :stroke-width="2.5" aria-hidden="true" />
+              </span>
+              <span class="entry-label respin-label">{{ formatRespinLabel(respin.text) }}</span>
+            </div>
 
-          <div class="entry-item-actions">
-            <BauhausCounter
-              :id="`${embedded ? 'mobile-' : ''}respin-replicas`"
-              compact
-              :model-value="respin.replicas"
-              :min="1"
-              :max="100"
-              :step="1"
-              :readonly="disabled"
-              aria-label="Respin replicas"
-              decrement-label="Decrease respin replicas"
-              increment-label="Increase respin replicas"
-              @update:model-value="onRespinReplicasUpdate"
-            />
+            <div class="entry-item-actions">
+              <BauhausCounter
+                :id="`${embedded ? 'mobile-' : ''}respin-replicas`"
+                compact
+                :model-value="respin.replicas"
+                :min="1"
+                :max="100"
+                :step="1"
+                :readonly="disabled"
+                aria-label="Respin replicas"
+                decrement-label="Decrease respin replicas"
+                increment-label="Increase respin replicas"
+                @update:model-value="onRespinReplicasUpdate"
+              />
 
-            <button
-              type="button"
-              class="brutalist-btn btn-small btn-red action-icon-btn"
-              :class="{ 'is-locked': disabled }"
-              aria-label="Disable respin slice"
-              @click="disableRespin"
-            >
-              <X :size="18" :stroke-width="3" aria-hidden="true" />
-            </button>
-          </div>
-        </li>
-      </ul>
+              <button
+                type="button"
+                class="brutalist-btn btn-small btn-red action-icon-btn"
+                :class="{ 'is-locked': disabled }"
+                aria-label="Disable respin slice"
+                @click="disableRespin"
+              >
+                <X :size="18" :stroke-width="3" aria-hidden="true" />
+              </button>
+            </div>
+          </li>
+        </ul>
       </ScrollAreaViewport>
       <ScrollAreaScrollbar orientation="vertical" class="entries-scrollbar">
         <ScrollAreaThumb class="entries-scroll-thumb" />
@@ -236,7 +231,10 @@ function formatRespinLabel(text: string): string {
   min-width: 0;
 }
 
-.entries-card :deep(.entries-scroll-root:has(.entries-scrollbar[data-state='visible']) .entries-scroll-viewport) {
+.entries-card
+  :deep(
+    .entries-scroll-root:has(.entries-scrollbar[data-state='visible']) .entries-scroll-viewport
+  ) {
   padding-right: 14px;
 }
 

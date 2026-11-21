@@ -462,10 +462,18 @@ onBeforeUnmount(() => {
 }
 
 @keyframes pin-wiggle {
-  0% { transform: translateX(-50%) rotate(0deg); }
-  25% { transform: translateX(-50%) rotate(-25deg); }
-  75% { transform: translateX(-50%) rotate(20deg); }
-  100% { transform: translateX(-50%) rotate(0deg); }
+  0% {
+    transform: translateX(-50%) rotate(0deg);
+  }
+  25% {
+    transform: translateX(-50%) rotate(-25deg);
+  }
+  75% {
+    transform: translateX(-50%) rotate(20deg);
+  }
+  100% {
+    transform: translateX(-50%) rotate(0deg);
+  }
 }
 
 .spin-action-area {

@@ -71,7 +71,7 @@ function onEntryTextInput(): void {
       :aria-invalid="textError"
       :aria-describedby="textError ? `${id}-error` : undefined"
       @input="onEntryTextInput"
-    >
+    />
     <button
       type="submit"
       class="brutalist-btn btn-yellow add-entry-btn"
@@ -80,12 +80,7 @@ function onEntryTextInput(): void {
     >
       ADD
     </button>
-    <div
-      v-if="textError"
-      :id="`${id}-error`"
-      role="alert"
-      class="custom-validation-bubble"
-    >
+    <div v-if="textError" :id="`${id}-error`" role="alert" class="custom-validation-bubble">
       PLEASE GIVE A NAME TO YOUR ENTRY
     </div>
   </form>
@@ -105,7 +100,9 @@ function onEntryTextInput(): void {
 }
 
 .add-entry-form:focus-within {
-  box-shadow: 0 0 0 3px var(--accent-blue), var(--shadow);
+  box-shadow:
+    0 0 0 3px var(--accent-blue),
+    var(--shadow);
 }
 
 .add-entry-form.is-embedded {
@@ -115,7 +112,9 @@ function onEntryTextInput(): void {
 }
 
 .add-entry-form.is-embedded:focus-within {
-  box-shadow: 0 0 0 3px var(--accent-blue), 4px 4px 0px 0px var(--primary);
+  box-shadow:
+    0 0 0 3px var(--accent-blue),
+    4px 4px 0px 0px var(--primary);
 }
 
 .add-entry-input {

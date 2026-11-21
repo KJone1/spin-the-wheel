@@ -78,18 +78,10 @@ function onShuffle(): void {
       >
         SHUFFLE
       </button>
-      <button
-        type="button"
-        class="brutalist-btn btn-yellow"
-        @click="emit('open-presets')"
-      >
+      <button type="button" class="brutalist-btn btn-yellow" @click="emit('open-presets')">
         PRESETS
       </button>
-      <button
-        type="button"
-        class="brutalist-btn btn-yellow"
-        @click="emit('open-settings')"
-      >
+      <button type="button" class="brutalist-btn btn-yellow" @click="emit('open-settings')">
         SETTINGS
       </button>
     </div>

@@ -197,7 +197,9 @@ function getIndicatorColor(hex: string): string {
   align-items: center;
   justify-content: center;
   user-select: none;
-  transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+  transition:
+    transform 0.1s ease-out,
+    box-shadow 0.1s ease-out;
 }
 
 .color-popover-card.is-mobile :deep(.swatch-item) {

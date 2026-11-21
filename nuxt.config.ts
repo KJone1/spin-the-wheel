@@ -1,10 +1,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2026-11-20',
   devtools: { enabled: false },
-  modules: [
-    'reka-ui/nuxt',
-    '@nuxt/eslint'
-  ],
+  modules: ['reka-ui/nuxt', '@nuxt/eslint'],
   css: ['~/assets/css/theme.css'],
   nitro: {
     preset: 'cloudflare_module',
@@ -17,9 +14,7 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: { lang: 'en' },
       title: 'WHEEL DECIDES DESTINY',
-      meta: [
-        { name: 'viewport', content: 'width=device-width, initial-scale=1.0' }
-      ],
+      meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1.0' }],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },

@@ -1,6 +1,7 @@
 # Developer & AI Agent Guidelines (High Signal / Low Token)
 
 ## Architecture
+
 - **Tech Stack**: Nuxt 4, Vue 3, TypeScript, Reka UI (`reka-ui/nuxt`), Lucide Vue (`@lucide/vue`), Cloudflare Workers (`cloudflare_module`), Cloudflare D1 (raw SQL).
 - **File Roles**:
   - `app/app.vue` -> Root layout, SSR bootstrap state, slice interleaving, desktop/mobile coordination
@@ -21,11 +22,13 @@
   - `db/migrations/` & `db/seed.sql` -> D1 SQLite schema, migrations, and seed data
 
 ## Code Standards
+
 - **Style Rules**: Strictly follow [DESIGN.md](DESIGN.md). Plain scoped CSS + theme tokens. No soft shadows, gradients, or border-radius. Use `3px` solid borders and `6px` offset shadows.
 - **Comments Policy**: Do NOT write single-line or block comments. Keep source code completely self-documenting and raw.
 - **Asset Policy**: Avoid external media files (images, audio). Use `@lucide/vue` icons, local/inline SVG (`public/favicon.svg`), and Web Audio API synthetic ticks (fonts load from Google Fonts in `nuxt.config.ts`).
 
 ## Mechanics
+
 - **Physics**: Time-based easing (`easeOutQuint`) inside `WheelCanvas.vue` for frame-rate independence.
 - **Interleaving**: Replicas are interleaved in `buildInterleavedSlices()` to alternate sectors (e.g., YES, NO, YES, NO).
 - **Auto-Respin**: When landing on the Respin sector, bypass modals, flash button red (`HERE WE GO AGAIN...`), and automatically trigger next spin after `autoRespinDelayMs`.

@@ -86,9 +86,7 @@ function onShuffle(): void {
           <ChevronUp :size="18" :stroke-width="3" aria-hidden="true" />
           <span>CONTROLS</span>
         </span>
-        <DrawerTrigger class="sheet-bar-cta" @click.stop>
-          OPEN
-        </DrawerTrigger>
+        <DrawerTrigger class="sheet-bar-cta" @click.stop> OPEN </DrawerTrigger>
       </DrawerSwipeArea>
 
       <DrawerVirtualKeyboardProvider>

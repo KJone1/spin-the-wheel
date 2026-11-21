@@ -146,7 +146,8 @@ function selectPreset(preset: Preset): void {
   padding: 0 4px 4px 0;
 }
 
-.modal-body :deep(.presets-scroll-root:has(.presets-scrollbar[data-state='visible']) .presets-grid) {
+.modal-body
+  :deep(.presets-scroll-root:has(.presets-scrollbar[data-state='visible']) .presets-grid) {
   padding-right: 22px;
 }
 

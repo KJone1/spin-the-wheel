@@ -20,8 +20,7 @@ if (error.value || !bootstrap.value) {
 
 const initialSettings = bootstrap.value.settings
 const presets = computed(() => bootstrap.value!.presets)
-const defaultPreset =
-  presets.value.find(preset => preset.isDefault) ?? presets.value[0]!
+const defaultPreset = presets.value.find(preset => preset.isDefault) ?? presets.value[0]!
 
 function mapPresetEntries(preset: Preset): WheelEntry[] {
   return preset.entries.map((entry, idx) => ({
@@ -326,10 +325,7 @@ function handleWinner(slice: WheelSlice): void {
       @saved="handleSettingsSaved"
     />
 
-    <WinnerModal
-      v-model:open="winnerOpen"
-      :winner="currentWinner"
-    />
+    <WinnerModal v-model:open="winnerOpen" :winner="currentWinner" />
   </div>
 </template>
 

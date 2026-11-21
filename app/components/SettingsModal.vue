@@ -106,9 +106,7 @@ async function onSubmit(): Promise<void> {
           </DialogClose>
         </div>
 
-        <DialogDescription class="sr-only">
-          Update and save wheel settings.
-        </DialogDescription>
+        <DialogDescription class="sr-only"> Update and save wheel settings. </DialogDescription>
 
         <div class="modal-body">
           <form class="settings-form" novalidate @submit.prevent="onSubmit">

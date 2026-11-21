@@ -143,7 +143,9 @@ const emit = defineEmits<{
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background-color 0.1s ease-out, color 0.1s ease-out;
+  transition:
+    background-color 0.1s ease-out,
+    color 0.1s ease-out;
 }
 
 .bauhaus-counter.is-compact .bauhaus-counter-btn {
