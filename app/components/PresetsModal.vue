@@ -113,21 +113,6 @@ function selectPreset(preset: Preset): void {
                         }"
                       >
                         <span class="preset-chip-count">{{ preset.respinReplicas }}X</span>
-                        <svg
-                          class="preset-chip-icon"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 16 16"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2.5"
-                          stroke-linecap="square"
-                          stroke-linejoin="miter"
-                          aria-hidden="true"
-                        >
-                          <path d="M13 8a5 5 0 1 1-1.5-3.5" />
-                          <polyline points="12.5 1.8 12.5 5.2 9.1 5.2" />
-                        </svg>
                         <span class="preset-chip-label">{{ formatRespinLabel(respinLabel) }}</span>
                       </li>
                     </ul>
@@ -221,14 +206,14 @@ function selectPreset(preset: Preset): void {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .preset-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.22rem 0.5rem 0.22rem 0.25rem;
+  gap: 0.25rem;
+  padding: 0.22rem 0.32rem 0.22rem 0.18rem;
   border: 2px solid var(--primary);
   box-shadow: 2px 2px 0px 0px var(--primary);
   font-family: var(--font-heading);
@@ -252,11 +237,6 @@ function selectPreset(preset: Preset): void {
   font-size: 0.72rem;
   font-weight: 800;
   line-height: 1;
-  flex-shrink: 0;
-}
-
-.preset-chip-icon {
-  display: block;
   flex-shrink: 0;
 }
 
