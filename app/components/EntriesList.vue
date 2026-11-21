@@ -92,7 +92,7 @@ function formatRespinLabel(text: string): string {
               :colors="sliceColors"
               :entry-label="entry.text"
               :disabled="disabled"
-              :mode="embedded ? 'modal' : 'popover'"
+              :mobile="embedded"
               @update:model-value="onEntryColorUpdate(entry.id, $event)"
             />
             <span class="entry-label" :title="entry.text">{{ entry.text.toUpperCase() }}</span>

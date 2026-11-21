@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Check, X } from '@lucide/vue'
+import { Check } from '@lucide/vue'
 
 const props = withDefaults(
   defineProps<{
@@ -7,11 +7,11 @@ const props = withDefaults(
     colors: string[]
     entryLabel: string
     disabled?: boolean
-    mode?: 'popover' | 'modal'
+    mobile?: boolean
   }>(),
   {
     disabled: false,
-    mode: 'popover'
+    mobile: false
   }
 )
 
@@ -83,70 +83,12 @@ function getIndicatorColor(hex: string): string {
 </script>
 
 <template>
-  <DialogRoot v-if="mode === 'modal'" :open="isOpen" @update:open="onOpenChange">
-    <DialogTrigger as-child>
-      <button
-        type="button"
-        class="color-trigger-btn is-mobile"
-        :class="{ 'is-locked': disabled }"
-        :style="{ backgroundColor: modelValue }"
-        :aria-label="`Change color for ${entryLabel}`"
-      />
-    </DialogTrigger>
-
-    <DialogPortal>
-      <DialogOverlay class="modal-overlay" />
-      <DialogContent class="modal-content brutalist-card border-yellow color-modal-content">
-        <div class="modal-header color-modal-header">
-          <DialogTitle as="h2" class="color-modal-title">
-            {{ entryLabel.toUpperCase() }}
-          </DialogTitle>
-          <DialogClose class="modal-close brutalist-btn btn-red" aria-label="Close color picker">
-            <X :size="18" :stroke-width="3" aria-hidden="true" />
-          </DialogClose>
-        </div>
-
-        <DialogDescription class="sr-only">
-          Choose a slice color for {{ entryLabel }}.
-        </DialogDescription>
-
-        <div class="modal-body color-modal-body">
-          <ColorSwatchPickerRoot
-            class="swatch-grid is-modal"
-            :model-value="modelValue"
-            selection-behavior="replace"
-            :disabled="disabled"
-            orientation="horizontal"
-            aria-label="Slice colors"
-            @update:model-value="onColorSelect"
-          >
-            <ColorSwatchPickerItem
-              v-for="color in colors"
-              :key="color"
-              :value="color"
-              class="swatch-item is-modal"
-              @select="onItemSelect(color)"
-            >
-              <ColorSwatchPickerItemSwatch class="swatch-fill" />
-              <ColorSwatchPickerItemIndicator
-                class="swatch-indicator"
-                :style="{ color: getIndicatorColor(color) }"
-              >
-                <Check :size="24" :stroke-width="3" aria-hidden="true" />
-              </ColorSwatchPickerItemIndicator>
-            </ColorSwatchPickerItem>
-          </ColorSwatchPickerRoot>
-        </div>
-      </DialogContent>
-    </DialogPortal>
-  </DialogRoot>
-
-  <PopoverRoot v-else :open="isOpen" @update:open="onOpenChange">
+  <PopoverRoot :open="isOpen" :modal="mobile" @update:open="onOpenChange">
     <PopoverTrigger as-child>
       <button
         type="button"
         class="color-trigger-btn"
-        :class="{ 'is-locked': disabled }"
+        :class="{ 'is-locked': disabled, 'is-mobile': mobile }"
         :style="{ backgroundColor: modelValue }"
         :aria-label="`Change color for ${entryLabel}`"
       />
@@ -160,7 +102,7 @@ function getIndicatorColor(hex: string): string {
         :side-offset="8"
         :collision-padding="12"
       >
-        <div class="color-popover-card">
+        <div class="color-popover-card" :class="{ 'is-mobile': mobile }">
           <ColorSwatchPickerRoot
             class="swatch-grid"
             :model-value="modelValue"
@@ -182,7 +124,7 @@ function getIndicatorColor(hex: string): string {
                 class="swatch-indicator"
                 :style="{ color: getIndicatorColor(color) }"
               >
-                <Check :size="18" :stroke-width="3" aria-hidden="true" />
+                <Check :size="mobile ? 20 : 18" :stroke-width="3" aria-hidden="true" />
               </ColorSwatchPickerItemIndicator>
             </ColorSwatchPickerItem>
           </ColorSwatchPickerRoot>
@@ -220,13 +162,8 @@ function getIndicatorColor(hex: string): string {
 }
 
 :global(.entry-color-popover) {
-  z-index: 80;
+  z-index: 100;
   outline: none;
-}
-
-:global(.color-modal-content) {
-  max-width: 340px;
-  padding: 1.25rem;
 }
 
 .color-popover-card {
@@ -236,39 +173,19 @@ function getIndicatorColor(hex: string): string {
   padding: 0.75rem;
 }
 
-.color-modal-header {
-  gap: 0.75rem;
-  padding-bottom: 0.75rem;
-}
-
-.color-modal-header :deep(.color-modal-title) {
-  font-size: 1.25rem;
-  line-height: 1.1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.color-modal-body {
-  padding-top: 0.75rem;
-}
-
-.color-popover-card :deep(.swatch-grid),
-.color-modal-body :deep(.swatch-grid) {
+.color-popover-card :deep(.swatch-grid) {
   display: grid;
   grid-template-columns: repeat(3, 40px);
   gap: 0.55rem;
   outline: none;
 }
 
-.color-modal-body :deep(.swatch-grid.is-modal) {
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
+.color-popover-card.is-mobile :deep(.swatch-grid) {
+  grid-template-columns: repeat(3, 44px);
+  gap: 0.65rem;
 }
 
-.color-popover-card :deep(.swatch-item),
-.color-modal-body :deep(.swatch-item) {
+.color-popover-card :deep(.swatch-item) {
   position: relative;
   width: 40px;
   height: 40px;
@@ -283,43 +200,36 @@ function getIndicatorColor(hex: string): string {
   transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
 }
 
-.color-modal-body :deep(.swatch-item.is-modal) {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  box-shadow: 4px 4px 0px 0px var(--primary);
+.color-popover-card.is-mobile :deep(.swatch-item) {
+  width: 44px;
+  height: 44px;
 }
 
 @media (hover: hover) {
-  .color-popover-card :deep(.swatch-item:hover),
-  .color-modal-body :deep(.swatch-item:hover) {
+  .color-popover-card :deep(.swatch-item:hover) {
     transform: translate(-1px, -1px);
     box-shadow: 4px 4px 0px 0px var(--primary);
   }
 }
 
-.color-popover-card :deep(.swatch-item:active),
-.color-modal-body :deep(.swatch-item:active) {
+.color-popover-card :deep(.swatch-item:active) {
   transform: translate(3px, 3px);
   box-shadow: 0px 0px 0px 0px var(--primary);
   transition: none;
 }
 
-.color-popover-card :deep(.swatch-item:focus-visible),
-.color-modal-body :deep(.swatch-item:focus-visible) {
+.color-popover-card :deep(.swatch-item:focus-visible) {
   outline: 3px solid var(--accent-blue);
   outline-offset: 2px;
 }
 
-.color-popover-card :deep(.swatch-fill),
-.color-modal-body :deep(.swatch-fill) {
+.color-popover-card :deep(.swatch-fill) {
   position: absolute;
   inset: 0;
   background-color: var(--reka-color-swatch-color);
 }
 
-.color-popover-card :deep(.swatch-indicator),
-.color-modal-body :deep(.swatch-indicator) {
+.color-popover-card :deep(.swatch-indicator) {
   position: relative;
   z-index: 1;
   display: inline-flex;
