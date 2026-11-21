@@ -37,6 +37,12 @@ withDefaults(
 const emit = defineEmits<{
   'update:modelValue': [value: number]
 }>()
+
+function onModelValueUpdate(value: number | undefined): void {
+  if (typeof value === 'number' && !Number.isNaN(value)) {
+    emit('update:modelValue', value)
+  }
+}
 </script>
 
 <template>
@@ -51,7 +57,7 @@ const emit = defineEmits<{
     :locale="locale"
     :readonly="readonly"
     :focus-on-change="false"
-    @update:model-value="emit('update:modelValue', $event)"
+    @update:model-value="onModelValueUpdate"
   >
     <div :class="compact ? 'compact-counter-wrap' : 'counter-row'">
       <label v-if="label" :for="id" class="counter-label">{{ label }}</label>

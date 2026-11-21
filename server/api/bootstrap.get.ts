@@ -46,9 +46,9 @@ export default defineEventHandler(async (event): Promise<BootstrapPayload> => {
     )
   ])
 
-  const settingRows = (settingsResult.results ?? []) as SettingRow[]
-  const presetRows = (presetsResult.results ?? []) as PresetRow[]
-  const entryRows = (entriesResult.results ?? []) as PresetEntryRow[]
+  const settingRows = (settingsResult?.results ?? []) as SettingRow[]
+  const presetRows = (presetsResult?.results ?? []) as PresetRow[]
+  const entryRows = (entriesResult?.results ?? []) as PresetEntryRow[]
 
   if (presetRows.length === 0) {
     throw createError({

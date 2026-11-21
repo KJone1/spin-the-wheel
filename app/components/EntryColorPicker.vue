@@ -37,7 +37,7 @@ function onOpenChange(next: boolean): void {
   isOpen.value = next
 }
 
-function onColorSelect(value: string | string[] | undefined): void {
+function onColorSelect(value: unknown): void {
   if (props.disabled || typeof value !== 'string' || !value) {
     return
   }
