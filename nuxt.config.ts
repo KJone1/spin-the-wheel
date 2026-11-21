@@ -2,7 +2,8 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-11-20',
   devtools: { enabled: false },
   modules: [
-    'reka-ui/nuxt'
+    'reka-ui/nuxt',
+    '@nuxt/eslint'
   ],
   css: ['~/assets/css/theme.css'],
   nitro: {
