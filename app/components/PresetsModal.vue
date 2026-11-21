@@ -143,7 +143,7 @@ function selectPreset(preset: Preset): void {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 4px 4px 8px 4px;
+  padding: 0 4px 4px 0;
 }
 
 .modal-body :deep(.presets-scroll-root:has(.presets-scrollbar[data-state='visible']) .presets-grid) {
@@ -169,7 +169,7 @@ function selectPreset(preset: Preset): void {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem;
+  padding: 0.875rem 1rem;
   box-shadow: 4px 4px 0px 0px var(--primary);
 }
 
@@ -239,7 +239,8 @@ function selectPreset(preset: Preset): void {
   .preset-item {
     flex-direction: column;
     align-items: stretch;
-    gap: 1rem;
+    padding: 0.75rem;
+    gap: 0.75rem;
   }
 }
 </style>
