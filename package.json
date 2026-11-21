@@ -21,6 +21,7 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@lucide/vue": "^1.77.0",
     "nuxt": "^4.6.4",
     "reka-ui": "^2.11.0",
     "vue": "latest"

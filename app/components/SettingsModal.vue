@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { X } from '@lucide/vue'
+
 const props = defineProps<{
   open: boolean
   spinDuration: number
@@ -67,19 +69,7 @@ async function onSubmit(): Promise<void> {
         <div class="modal-header">
           <DialogTitle as="h2">SETTINGS</DialogTitle>
           <DialogClose class="modal-close brutalist-btn btn-red" aria-label="Close settings">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="3"
-              stroke-linecap="square"
-              aria-hidden="true"
-            >
-              <line x1="3" y1="3" x2="13" y2="13" />
-              <line x1="13" y1="3" x2="3" y2="13" />
-            </svg>
+            <X :size="18" :stroke-width="3" aria-hidden="true" />
           </DialogClose>
         </div>
 

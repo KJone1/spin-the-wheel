@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RotateCw, X } from '@lucide/vue'
 import type { RespinConfig, WheelEntry } from '~~/shared/types/wheel'
 
 const props = withDefaults(
@@ -119,18 +120,7 @@ function formatRespinLabel(text: string): string {
               :aria-label="`Delete ${entry.text}`"
               @click="deleteEntry(entry.id)"
             >
-              <svg
-                width="11"
-                height="11"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="square"
-              >
-                <line x1="3" y1="3" x2="13" y2="13" />
-                <line x1="13" y1="3" x2="3" y2="13" />
-              </svg>
+              <X :size="18" :stroke-width="3" aria-hidden="true" />
             </button>
           </div>
         </li>
@@ -141,20 +131,7 @@ function formatRespinLabel(text: string): string {
               class="entry-color-indicator respin-color-indicator"
               :style="{ backgroundColor: respin.color }"
             >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="square"
-                stroke-linejoin="miter"
-                aria-hidden="true"
-              >
-                <path d="M13 8a5 5 0 1 1-1.5-3.5" />
-                <polyline points="12.5 1.8 12.5 5.2 9.1 5.2" />
-              </svg>
+              <RotateCw :size="16" :stroke-width="2.5" aria-hidden="true" />
             </span>
             <span class="entry-label respin-label">{{ formatRespinLabel(respin.text) }}</span>
           </div>
@@ -181,18 +158,7 @@ function formatRespinLabel(text: string): string {
               aria-label="Disable respin slice"
               @click="disableRespin"
             >
-              <svg
-                width="11"
-                height="11"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="square"
-              >
-                <line x1="3" y1="3" x2="13" y2="13" />
-                <line x1="13" y1="3" x2="3" y2="13" />
-              </svg>
+              <X :size="18" :stroke-width="3" aria-hidden="true" />
             </button>
           </div>
         </li>

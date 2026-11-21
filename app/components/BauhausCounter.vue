@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Minus, Plus } from '@lucide/vue'
+
 withDefaults(
   defineProps<{
     id: string
@@ -60,17 +62,7 @@ const emit = defineEmits<{
           class="bauhaus-counter-btn bauhaus-counter-dec"
           :aria-label="decrementLabel"
         >
-          <svg
-            width="11"
-            height="11"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="3"
-            stroke-linecap="square"
-          >
-            <line x1="2" y1="8" x2="14" y2="8" />
-          </svg>
+          <Minus :size="14" :stroke-width="3" aria-hidden="true" />
         </NumberFieldDecrement>
         <NumberFieldInput
           class="bauhaus-counter-input"
@@ -82,18 +74,7 @@ const emit = defineEmits<{
           class="bauhaus-counter-btn bauhaus-counter-inc"
           :aria-label="incrementLabel"
         >
-          <svg
-            width="11"
-            height="11"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="3"
-            stroke-linecap="square"
-          >
-            <line x1="8" y1="2" x2="8" y2="14" />
-            <line x1="2" y1="8" x2="14" y2="8" />
-          </svg>
+          <Plus :size="14" :stroke-width="3" aria-hidden="true" />
         </NumberFieldIncrement>
       </div>
     </div>

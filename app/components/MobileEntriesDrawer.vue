@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ChevronUp, X } from '@lucide/vue'
 import type { RespinConfig, WheelEntry } from '~~/shared/types/wheel'
 
 const props = defineProps<{
@@ -88,19 +89,7 @@ function onOpenSettings(): void {
     <DrawerRoot v-model:open="isOpen" swipe-direction="down">
       <DrawerSwipeArea class="mobile-sheet-bar" @click="openDrawer">
         <span class="sheet-bar-label">
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="3"
-            stroke-linecap="square"
-            stroke-linejoin="miter"
-            aria-hidden="true"
-          >
-            <polyline points="3 11 8 5 13 11" />
-          </svg>
+          <ChevronUp :size="18" :stroke-width="3" aria-hidden="true" />
           <span>CONTROLS</span>
         </span>
         <DrawerTrigger class="sheet-bar-cta" @click.stop>
@@ -125,19 +114,7 @@ function onOpenSettings(): void {
                       class="modal-close brutalist-btn btn-red"
                       aria-label="Close controls"
                     >
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="3"
-                        stroke-linecap="square"
-                        aria-hidden="true"
-                      >
-                        <line x1="3" y1="3" x2="13" y2="13" />
-                        <line x1="13" y1="3" x2="3" y2="13" />
-                      </svg>
+                      <X :size="18" :stroke-width="3" aria-hidden="true" />
                     </DrawerClose>
                   </div>
                 </div>

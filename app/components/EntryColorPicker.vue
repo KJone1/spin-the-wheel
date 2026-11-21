@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Check, X } from '@lucide/vue'
+
 const props = withDefaults(
   defineProps<{
     modelValue: string
@@ -100,19 +102,7 @@ function getIndicatorColor(hex: string): string {
             {{ entryLabel.toUpperCase() }}
           </DialogTitle>
           <DialogClose class="modal-close brutalist-btn btn-red" aria-label="Close color picker">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="3"
-              stroke-linecap="square"
-              aria-hidden="true"
-            >
-              <line x1="3" y1="3" x2="13" y2="13" />
-              <line x1="13" y1="3" x2="3" y2="13" />
-            </svg>
+            <X :size="18" :stroke-width="3" aria-hidden="true" />
           </DialogClose>
         </div>
 
@@ -142,19 +132,7 @@ function getIndicatorColor(hex: string): string {
                 class="swatch-indicator"
                 :style="{ color: getIndicatorColor(color) }"
               >
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-linecap="square"
-                  stroke-linejoin="miter"
-                  aria-hidden="true"
-                >
-                  <polyline points="2.5 8.5 6.2 12 13.5 4.2" />
-                </svg>
+                <Check :size="24" :stroke-width="3" aria-hidden="true" />
               </ColorSwatchPickerItemIndicator>
             </ColorSwatchPickerItem>
           </ColorSwatchPickerRoot>
@@ -204,19 +182,7 @@ function getIndicatorColor(hex: string): string {
                 class="swatch-indicator"
                 :style="{ color: getIndicatorColor(color) }"
               >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-linecap="square"
-                  stroke-linejoin="miter"
-                  aria-hidden="true"
-                >
-                  <polyline points="2.5 8.5 6.2 12 13.5 4.2" />
-                </svg>
+                <Check :size="18" :stroke-width="3" aria-hidden="true" />
               </ColorSwatchPickerItemIndicator>
             </ColorSwatchPickerItem>
           </ColorSwatchPickerRoot>
